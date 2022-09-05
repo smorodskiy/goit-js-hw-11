@@ -1,19 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SimpleLightbox library</title>
-    <link rel="stylesheet" href="./sass/index.scss" />
-  </head>
-  <body>
-    <header>
-      <include src="./partials/search.html"></include>
-    </header>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>SimpleLightbox library</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="./sass/index.scss" />
+    </head>
+    <body>
+        <header>
+            <!-- Search part -->
+            <include src="./partials/search.html"></include>
+        </header>
 
-    <include src="./partials/gallery.html"></include>
+        <!-- Gallery part -->
+        <include src="./partials/gallery.html"></include>
 
-    <script src="index.js" type="module"></script>
-  </body>
+        <script src="index.js" type="module"></script>
+    </body>
 </html>
