@@ -1,5 +1,8 @@
-document.addEventListener("DOMContentLoaded", function () {
+import { fetchPictures } from "./fetch.js";
+import Notiflix from "notiflix";
+import { renderPicsToGrid } from "./gallery";
 
+document.addEventListener("DOMContentLoaded", function () {
         // Refs to DOM elements
         const searchElem = document.querySelector("#search");
         const searchBoxElem = document.querySelector(".search-box");
@@ -28,7 +31,33 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         // On button click
-        goBtnElem.addEventListener('click', () => {
-            console.log('test');
-        })
+        goBtnElem.addEventListener("click", () => {
+                getPicByName(searchElem.value);
+        });
 });
+
+// Post http req and get names
+function getPicByName(name) {
+        fetchPictures(name)
+                .then((response) => {
+                        if (!response.ok) {
+                                throw new Error(response.status);
+                        }
+
+                        return response.json();
+                })
+
+                .then((foundedPics) => {
+                        try {
+                                renderPicsToGrid(foundedPics);
+                        } catch (error) {
+                                console.log(error);
+
+                                Notiflix.Notify.failure(error.message);
+                        }
+                })
+
+                .catch(() => {
+                        Notiflix.Notify.failure("Oops, there is no country with that name");
+                });
+}

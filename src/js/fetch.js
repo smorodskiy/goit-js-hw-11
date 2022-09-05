@@ -2,7 +2,7 @@ import { debounce } from "lodash";
 
 const URL = "https://pixabay.com/api/";
 const API_KEY = "29730166-90781f613c54edfa0d110c161";
-const fields = "name,capital,population,flags,languages";
+
 const DEBOUNCE_DELAY = 300;
 
 // key - твій унікальний ключ доступу до API.
@@ -10,7 +10,6 @@ const DEBOUNCE_DELAY = 300;
 // image_type - тип зображення. На потрібні тільки фотографії, тому постав значення photo.
 // orientation - орієнтація фотографії. Постав значення horizontal.
 // safesearch - фільтр за віком. Постав значення true.
-
 
 // webformatURL - посилання на маленьке зображення для списку карток.
 // largeImageURL - посилання на велике зображення.
@@ -22,8 +21,17 @@ const DEBOUNCE_DELAY = 300;
 
 // Fetch pictures by name
 export const fetchPictures = (name) => {
+        const param = new URLSearchParams({
+                key: API_KEY,
+                q: name,
+                image_type: "photo",
+                orientation: "horizontal",
+                safesearch: true,
+        });
+
         const fetched = () => {
-                return fetch(`${URL}?key=${API_KEY}`, {
+                console.log(`${URL}?${param.toString()}`);
+                return fetch(`${URL}?${param.toString()}`, {
                         headers: {
                                 Accept: "application/json",
                         },

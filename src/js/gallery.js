@@ -1,42 +1,85 @@
-import { galleryItems } from "./gallery-items.js";
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
-const gallery = document.querySelector(".gallery");
-const imgElements = document.createDocumentFragment();
+// document.addEventListener("DOMContentLoaded", function () {
 
-// Append all images from array to html
-galleryItems.forEach((imgData) => {
-        const img = createElement(imgData.preview, imgData.original, imgData.description);
-        imgElements.appendChild(img);
-});
 
-gallery.append(imgElements);
-
-// Version with JS
-// Create box of image
-function createElement(preview, original, description) {
-        const link = document.createElement("a");
-        const img = document.createElement("img");
-        link.classList.add("gallery__item");
-        link.setAttribute("href", original);
-        img.classList.add("gallery__image");
-        img.setAttribute("src", preview);
-        img.setAttribute("alt", description);
-        link.appendChild(img);
-        return link;
-}
-
-// Init lightbox
-var lightbox = new SimpleLightbox(".gallery a", {
-        captions: true,
-        captionType: "attr",
-        captionsData: "alt",
-        captionPosition: "bottom",
-        captionDelay: 250,
-});
+// const imgElements = document.createDocumentFragment();
 
 // Empty func, on future
-lightbox.on("show.simplelightbox", function () {
-        //   console.log("show");
-});
+// lightbox.on("show.simplelightbox", function () {
+//         //   console.log("show");
+// });
+
+// });
+
+// Create box of image
+function createPhotoCard(webformatURL, largeImageURL, tags, likes, views, comments, downloads) {
+        const photoCard = `
+        <a href="${largeImageURL}">
+        <div class="photo-card">
+                <img class="photo-card__image" src="${webformatURL}" alt="${tags}" loading="lazy" />
+                <div class="photo-card__info">
+                        <p class="photo-card__item">
+                                <b>Likes: ${likes}</b>
+                        </p>
+                        <p class="photo-card__item">
+                                <b>Views: ${views}</b>
+                        </p>
+                        <p class="photo-card__item">
+                                <b>Comments: ${comments}</b>
+                        </p>
+                        <p class="photo-card__item">
+                                <b>Downloads: ${downloads}</b>
+                        </p>
+                </div>
+        </div>
+        </a>
+        `;
+
+        return photoCard;
+}
+
+function initLightBox() {
+        // Init lightbox        
+        const lightbox = new SimpleLightbox(".gallery a", {
+                captions: true,
+                captionType: "attr",
+                captionsData: "alt",
+                captionPosition: "bottom",
+                captionDelay: 250,
+        });
+}
+
+// Rendering founded pictures to grid
+export function renderPicsToGrid(foundedPicsJson) {
+        const gallery = document.querySelector(".gallery");
+        const { hits, total, totalHits } = foundedPicsJson;
+
+        const photoCards = hits
+                .map((img) => {
+                        const {
+                                webformatURL,
+                                largeImageURL,
+                                tags,
+                                likes,
+                                views,
+                                comments,
+                                downloads,
+                        } = img;
+
+                        return createPhotoCard(
+                                webformatURL,
+                                largeImageURL,
+                                tags,
+                                likes,
+                                views,
+                                comments,
+                                downloads,
+                        );
+                })
+                .join("");
+
+        gallery.innerHTML = photoCards;
+        initLightBox();
+}
