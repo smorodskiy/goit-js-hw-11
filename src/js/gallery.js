@@ -43,6 +43,10 @@ function createGalleryCard(webformatURL, largeImageURL, tags, likes, views, comm
 }
 
 
+function emptyGallery() {
+                
+}
+
 // Rendering founded pictures to grid
 export function renderPicsToGrid(foundedPicsJson) {
         const gallery = document.querySelector(".gallery");
