@@ -46,9 +46,9 @@
         flex-direction: column;
     }
 
-    &__empty-page::after {
+    &--empty-page::after {
         content: "";
-        height: 80vh;
+        height: calc(94vh - 80px);
         background-image: url(../images/no-image.png);        
         background-repeat: no-repeat;
         background-size: 300px;

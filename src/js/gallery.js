@@ -78,6 +78,9 @@ export function renderPicsToGrid(foundedPicsJson) {
                 })
                 .join("");
 
+        // Remove blank pic
+        gallery.classList.remove("gallery--empty-page");
+
         // Add new photos to DOM
         gallery.innerHTML = galleryCards;
 
