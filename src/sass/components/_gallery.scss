@@ -46,7 +46,7 @@
         flex-direction: column;
     }
 
-    &::after {
+    &__empty-page::after {
         content: "";
         height: 80vh;
         background-image: url(../images/no-image.png);        
