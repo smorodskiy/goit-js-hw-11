@@ -1,5 +1,6 @@
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
+import icons from "../images/icons.svg";
 
 // Create instanse of SimpleBox
 const lightbox = new SimpleLightbox(".gallery a", {
@@ -10,7 +11,6 @@ const lightbox = new SimpleLightbox(".gallery a", {
         captionDelay: 250,
 });
 
-
 // Create box of image
 function createGalleryCard(webformatURL, largeImageURL, tags, likes, views, comments, downloads) {
         const galleryCard = `
@@ -20,19 +20,39 @@ function createGalleryCard(webformatURL, largeImageURL, tags, likes, views, comm
                 <div class="gallery__info">
                         <p class="gallery__item">
                                 <b>Likes</b>
-                                ${likes}
+                                <span class="gallery__icon-wrapper">
+                                        <svg class="gallery__icon gallery__likes-icon">
+                                                <use xlink:href="${icons}#icon-likes"></use>
+                                        </svg>
+                                        ${likes}
+                                </span>
                         </p>
                         <p class="gallery__item">
                                 <b>Views</b>
-                                ${views}
+                                <span class="gallery__icon-wrapper">
+                                        <svg class="gallery__icon gallery__views-icon">
+                                                <use xlink:href="${icons}#icon-views"></use>
+                                        </svg>
+                                        ${views}
+                                </span>                                
                         </p>
                         <p class="gallery__item">
                                 <b>Comments</b>
-                                ${comments}
+                                <span class="gallery__icon-wrapper">
+                                        <svg class="gallery__icon gallery__comments-icon">
+                                                <use xlink:href="${icons}#icon-comments"></use>
+                                        </svg>
+                                        ${comments}
+                                </span>                                                                
                         </p>
                         <p class="gallery__item">
                                 <b>Downloads</b>
-                                ${downloads}
+                                <span class="gallery__icon-wrapper">
+                                        <svg class="gallery__icon gallery__downloads-icon">
+                                                <use xlink:href="${icons}#icon-downloads"></use>
+                                        </svg>
+                                        ${downloads}
+                                </span>                                                                
                         </p>
                 </div>
         </div>
@@ -42,10 +62,7 @@ function createGalleryCard(webformatURL, largeImageURL, tags, likes, views, comm
         return galleryCard;
 }
 
-
-function emptyGallery() {
-                
-}
+function emptyGallery() {}
 
 // Rendering founded pictures to grid
 export function renderPicsToGrid(foundedPicsJson) {
@@ -86,5 +103,4 @@ export function renderPicsToGrid(foundedPicsJson) {
 
         // Refresh simple box for new DOM
         lightbox.refresh();
-
 }

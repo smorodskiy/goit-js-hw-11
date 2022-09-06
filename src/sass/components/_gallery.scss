@@ -38,21 +38,58 @@
     &__info {
         display: flex;
         justify-content: space-between;
-        text-align: center;
-        padding: 10px;
+        padding: 10px 20px;
     }
 
     &__item {
         display: flex;
         flex-direction: column;
+        font-size: 13px;
     }
+
+    &__icon-wrapper {
+        display: flex;
+        align-items: center;
+        font-size: 12px;
+        cursor: pointer;
+    }
+
+    &__icon-wrapper:hover &__icon {        
+        fill: rgb(63, 87, 179);
+        // stroke: rgb(63, 87, 179);
+        
+    }    
+
+    &__icon {
+        // content: "";
+        height: 14px;
+        width: 14px;
+        // background-repeat: no-repeat;
+        // background-size: contain;
+        margin-right: 4px;
+        // display: block;  
+    }
+
+    // &__like-icon::before {
+    //     background-color: #000;
+    //     mask-image: url(../images/likes.svg);
+    // }
+    // &__views-icon::before {
+    //     background-image: url(../images/views.svg);
+    // }
+    // &__comments-icon::before {
+    //     background-image: url(../images/comments.svg);
+    // }
+    // &__downloads-icon::before {
+    //     background-image: url(../images/downloads.svg);
+    // }
 
     &--empty-page::after {
         content: "";
         height: calc(100vh - 120px);
-        background-image: url(../images/no-image.png);        
+        background-image: url(../images/no-image.png);
         background-repeat: no-repeat;
-        background-size: 300px;
+        background-size: 150px;
         background-position: center;
         display: block;
     }
