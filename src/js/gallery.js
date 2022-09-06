@@ -1,62 +1,56 @@
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
-// document.addEventListener("DOMContentLoaded", function () {
+// Create instanse of SimpleBox
+const lightbox = new SimpleLightbox(".gallery a", {
+        captions: true,
+        captionType: "attr",
+        captionsData: "alt",
+        captionPosition: "bottom",
+        captionDelay: 250,
+});
 
-
-// const imgElements = document.createDocumentFragment();
-
-// Empty func, on future
-// lightbox.on("show.simplelightbox", function () {
-//         //   console.log("show");
-// });
-
-// });
 
 // Create box of image
-function createPhotoCard(webformatURL, largeImageURL, tags, likes, views, comments, downloads) {
-        const photoCard = `
-        <a href="${largeImageURL}">
-        <div class="photo-card">
-                <img class="photo-card__image" src="${webformatURL}" alt="${tags}" loading="lazy" />
-                <div class="photo-card__info">
-                        <p class="photo-card__item">
-                                <b>Likes: ${likes}</b>
+function createGalleryCard(webformatURL, largeImageURL, tags, likes, views, comments, downloads) {
+        const galleryCard = `
+        <a class="gallery__link" href="${largeImageURL}">
+        <div class="gallery__card">
+                <img class="gallery__image" src="${webformatURL}" alt="${tags}" loading="lazy" />
+                <div class="gallery__info">
+                        <p class="gallery__item">
+                                <b>Likes</b>
+                                ${likes}
                         </p>
-                        <p class="photo-card__item">
-                                <b>Views: ${views}</b>
+                        <p class="gallery__item">
+                                <b>Views</b>
+                                ${views}
                         </p>
-                        <p class="photo-card__item">
-                                <b>Comments: ${comments}</b>
+                        <p class="gallery__item">
+                                <b>Comments</b>
+                                ${comments}
                         </p>
-                        <p class="photo-card__item">
-                                <b>Downloads: ${downloads}</b>
+                        <p class="gallery__item">
+                                <b>Downloads</b>
+                                ${downloads}
                         </p>
                 </div>
         </div>
         </a>
         `;
 
-        return photoCard;
+        return galleryCard;
 }
 
-function initLightBox() {
-        // Init lightbox        
-        const lightbox = new SimpleLightbox(".gallery a", {
-                captions: true,
-                captionType: "attr",
-                captionsData: "alt",
-                captionPosition: "bottom",
-                captionDelay: 250,
-        });
-}
 
 // Rendering founded pictures to grid
 export function renderPicsToGrid(foundedPicsJson) {
         const gallery = document.querySelector(".gallery");
-        const { hits, total, totalHits } = foundedPicsJson;
 
-        const photoCards = hits
+        const { hits } = foundedPicsJson;
+
+        // Remap json to HTML elements
+        const galleryCards = hits
                 .map((img) => {
                         const {
                                 webformatURL,
@@ -68,7 +62,7 @@ export function renderPicsToGrid(foundedPicsJson) {
                                 downloads,
                         } = img;
 
-                        return createPhotoCard(
+                        return createGalleryCard(
                                 webformatURL,
                                 largeImageURL,
                                 tags,
@@ -80,6 +74,10 @@ export function renderPicsToGrid(foundedPicsJson) {
                 })
                 .join("");
 
-        gallery.innerHTML = photoCards;
-        initLightBox();
+        // Add new photos to DOM
+        gallery.innerHTML = galleryCards;
+
+        // Refresh simple box for new DOM
+        lightbox.refresh();
+
 }

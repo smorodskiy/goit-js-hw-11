@@ -2,7 +2,6 @@ import { debounce } from "lodash";
 
 const URL = "https://pixabay.com/api/";
 const API_KEY = "29730166-90781f613c54edfa0d110c161";
-
 const DEBOUNCE_DELAY = 300;
 
 // key - твій унікальний ключ доступу до API.
