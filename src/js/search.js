@@ -60,13 +60,15 @@ function getPicByName(name) {
                         try {
                                 const { totalHits } = foundedPics;
                                 if (totalHits == 0) {
-                                        throw new Error(
-                                                `Pictures for ${name} query is not founded`,
-                                        );
+                                        throw new Error(`Images on the request ${name} not found`);
                                 }
+
+                                Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+
                                 renderPicsToGrid(foundedPics);
                         } catch (error) {
                                 console.log(error);
+
                                 Notiflix.Notify.failure(error.message);
                         }
                 })
