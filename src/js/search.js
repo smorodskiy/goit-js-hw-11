@@ -1,4 +1,5 @@
 import { fetchPictures } from "./fetch.js";
+import { PER_PAGE } from "./fetch.js";
 import Notiflix from "notiflix";
 import { renderPicsToGrid } from "./gallery";
 
@@ -25,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
         searchElem.addEventListener("keydown", (e) => {
                 if (e.keyCode === 13) {
                         e.preventDefault();
-                        getPicByName(searchElem.value);
+                        getPicturesByName(searchElem.value);
                 }
         });
 
@@ -41,13 +42,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // On button click
         goBtnElem.addEventListener("click", () => {
-                getPicByName(searchElem.value);
+                getPicturesByName(searchElem.value);
         });
 });
 
 // Post http req and trying to get pictures
-function getPicByName(name) {
-        fetchPictures(name)
+function getPicturesByName(name, page) {
+        fetchPictures(name, page)
                 .then((response) => {
                         if (!response.ok) {
                                 throw new Error(response.status);
@@ -58,14 +59,22 @@ function getPicByName(name) {
 
                 .then((foundedPics) => {
                         try {
+                                // Total founded pics on free account
                                 const { totalHits } = foundedPics;
+
+                                // Calc pages
+                                const pages = Math.round(totalHits / PER_PAGE);
+
+                                console.log(pages);
+
+                                // If nothing founded
                                 if (totalHits == 0) {
                                         throw new Error(`Images on the request ${name} not found`);
                                 }
 
                                 Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
-                                console.log(foundedPics);
-                                renderPicsToGrid(foundedPics);
+
+                                renderPicsToGrid(foundedPics, pages);
                         } catch (error) {
                                 console.log(error);
 

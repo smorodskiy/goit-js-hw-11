@@ -79,7 +79,7 @@ function createGalleryCard(
 // Change like(fill and not fill)
 function onLikeBtn(btn) {
         const useElem = btn.querySelector("use");
-        const countLikesElem = btn.querySelector('p');
+        const countLikesElem = btn.querySelector("p");
 
         let href = useElem.getAttribute("xlink:href");
 
@@ -109,7 +109,7 @@ function attachEventsToCardsIcons() {
 }
 
 // Rendering founded pictures to grid
-export function renderPicsToGrid(foundedPicsJson) {
+export function renderPicsToGrid(foundedPicsJson, pages) {
         const gallery = document.querySelector(".gallery");
 
         const { hits } = foundedPicsJson;

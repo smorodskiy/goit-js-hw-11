@@ -2,7 +2,9 @@ import { debounce } from "lodash";
 
 const URL = "https://pixabay.com/api/";
 const API_KEY = "29730166-90781f613c54edfa0d110c161";
+export const PER_PAGE = 40;
 const DEBOUNCE_DELAY = 300;
+
 
 // key - твій унікальний ключ доступу до API.
 // q - термін для пошуку. Те, що буде вводити користувач.
@@ -19,13 +21,16 @@ const DEBOUNCE_DELAY = 300;
 // downloads - кількість завантажень.
 
 // Fetch pictures by name
-export const fetchPictures = (name) => {
+export const fetchPictures = (name, page = 1) => {
+
         const param = new URLSearchParams({
                 key: API_KEY,
                 q: name,
                 image_type: "photo",
                 orientation: "horizontal",
                 safesearch: true,
+                page,
+                per_page: PER_PAGE,
         });
 
         const fetched = () => {
