@@ -64,7 +64,7 @@ function getPicByName(name) {
                                 }
 
                                 Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
-
+                                console.log(foundedPics);
                                 renderPicsToGrid(foundedPics);
                         } catch (error) {
                                 console.log(error);

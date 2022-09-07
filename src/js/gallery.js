@@ -1,3 +1,4 @@
+import { head, slice } from "lodash";
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 import icons from "../images/icons.svg";
@@ -12,57 +13,100 @@ const lightbox = new SimpleLightbox(".gallery a", {
 });
 
 // Create box of image
-function createGalleryCard(webformatURL, largeImageURL, tags, likes, views, comments, downloads) {
+function createGalleryCard(
+        pageURL,
+        webformatURL,
+        largeImageURL,
+        tags,
+        likes,
+        views,
+        comments,
+        downloads,
+) {
         const galleryCard = `
-        <a class="gallery__link" href="${largeImageURL}">
+        
         <div class="gallery__card">
-                <img class="gallery__image" src="${webformatURL}" alt="${tags}" loading="lazy" />
-                <div class="gallery__info">
-                        <p class="gallery__item">
+                <a class="gallery__link" href="${largeImageURL}">
+                        <img class="gallery__image" src="${webformatURL}" alt="${tags}" loading="lazy" />
+                </a>
+                <ul class="gallery__info">
+                        <li class="gallery__item">
                                 <b>Likes</b>
-                                <span class="gallery__icon-wrapper">
-                                        <svg class="gallery__icon gallery__likes-icon">
-                                                <use xlink:href="${icons}#icon-likes"></use>
+                                <div class="gallery__icon-wrapper" data="likes">
+                                        <svg class="gallery__icon gallery__likes-icon">                                                
+                                                <use class="shown" xlink:href="${icons}#icon-likes"></use>
                                         </svg>
-                                        ${likes}
-                                </span>
-                        </p>
-                        <p class="gallery__item">
+                                        <p>${likes}</p>
+                                </div>
+                        </li>
+                        <li class="gallery__item">
                                 <b>Views</b>
-                                <span class="gallery__icon-wrapper">
+                                <div class="gallery__icon-wrapper" data="views">
                                         <svg class="gallery__icon gallery__views-icon">
                                                 <use xlink:href="${icons}#icon-views"></use>
                                         </svg>
-                                        ${views}
-                                </span>                                
-                        </p>
-                        <p class="gallery__item">
+                                        <p>${views}</p>
+                                </div>                                
+                        </li>
+                        <li class="gallery__item">
                                 <b>Comments</b>
-                                <span class="gallery__icon-wrapper">
-                                        <svg class="gallery__icon gallery__comments-icon">
-                                                <use xlink:href="${icons}#icon-comments"></use>
-                                        </svg>
-                                        ${comments}
-                                </span>                                                                
-                        </p>
-                        <p class="gallery__item">
+                                <a href="${pageURL}#comments">
+                                        <div class="gallery__icon-wrapper" data="comment">
+                                                <svg class="gallery__icon gallery__comments-icon">
+                                                        <use xlink:href="${icons}#icon-comments"></use>
+                                                </svg>
+                                                <p>${comments}</p>
+                                        </div>                                                                
+                                </a>
+                        </li>
+                        <li class="gallery__item">
                                 <b>Downloads</b>
-                                <span class="gallery__icon-wrapper">
+                                <div class="gallery__icon-wrapper" data="downloads">
                                         <svg class="gallery__icon gallery__downloads-icon">
                                                 <use xlink:href="${icons}#icon-downloads"></use>
                                         </svg>
-                                        ${downloads}
-                                </span>                                                                
-                        </p>
-                </div>
+                                        <p>${downloads}</p>
+                                </div>                                                                
+                        </li>
+                </ul>
         </div>
-        </a>
+        
         `;
 
         return galleryCard;
 }
 
-function emptyGallery() {}
+// Change like(fill and not fill)
+function onLikeBtn(btn) {
+        const useElem = btn.querySelector("use");
+        const countLikesElem = btn.querySelector('p');
+
+        let href = useElem.getAttribute("xlink:href");
+
+        if (href.includes("-fill")) {
+                href = href.substring(0, href.length - 5);
+                --countLikesElem.innerText;
+        } else {
+                href += "-fill";
+                ++countLikesElem.innerText;
+        }
+
+        useElem.setAttribute("xlink:href", href);
+}
+
+// Events on click buttons in cards
+function attachEventsToCardsIcons() {
+        const icons = document.querySelectorAll(".gallery__icon-wrapper");
+
+        icons.forEach((icon) => {
+                icon.addEventListener("click", (e) => {
+                        const btn = e.currentTarget;
+                        if (btn.getAttribute("data") == "likes") {
+                                onLikeBtn(btn);
+                        }
+                });
+        });
+}
 
 // Rendering founded pictures to grid
 export function renderPicsToGrid(foundedPicsJson) {
@@ -74,6 +118,7 @@ export function renderPicsToGrid(foundedPicsJson) {
         const galleryCards = hits
                 .map((img) => {
                         const {
+                                pageURL,
                                 webformatURL,
                                 largeImageURL,
                                 tags,
@@ -84,6 +129,7 @@ export function renderPicsToGrid(foundedPicsJson) {
                         } = img;
 
                         return createGalleryCard(
+                                pageURL,
                                 webformatURL,
                                 largeImageURL,
                                 tags,
@@ -103,4 +149,7 @@ export function renderPicsToGrid(foundedPicsJson) {
 
         // Refresh simple box for new DOM
         lightbox.refresh();
+
+        // Attach events on cards buttons
+        attachEventsToCardsIcons();
 }
