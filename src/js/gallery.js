@@ -112,6 +112,7 @@ function attachEventsToCardsIcons() {
         });
 }
 
+// Smooth scrolling for pagination
 function doSmoothScroll() {
         const { height: cardHeight } = document
                 .querySelector(".gallery")
@@ -126,6 +127,7 @@ function doSmoothScroll() {
         });
 }
 
+// Attach to window.scroll
 function attachToScrollAndPagination(name, currentPage, numPages) {
         // Check end of page and do pagination
         const isEndPageDebounced = debounce(() => {
@@ -135,12 +137,20 @@ function attachToScrollAndPagination(name, currentPage, numPages) {
 
                         // Deattach pagination if endpage and return
                         if (currentPage > numPages) {
+                                // Show end message
+                                Notiflix.Notify.success(`You've reached the end of search results.`);
                                 window.onscroll = null;
                                 return;
                         }
 
-                        // Post req for next page
-                        getPicturesByName(name, currentPage);
+                        // Post req for next page and doing smooth scroll
+                        // Wait async get... func
+                        (async () => {
+                                await getPicturesByName(name, currentPage);
+                                doSmoothScroll()
+                        })();
+                                                
+                        
                 }
         }, 300);
 
@@ -190,13 +200,14 @@ function renderPicsToGrid(picsOfJSON) {
         gallery.innerHTML += galleryCards;
 }
 
+// Initialization render gallery
 export function initRender(foundedPics, name, currentPage) {
         // Total founded pics on free account
         const { totalHits } = foundedPics;
 
         // If nothing founded throw Message and return
         if (totalHits == 0) {
-                throw new Error(`Images on the request ${name} not found`);
+                throw new Error(`Sorry, there are no images matching your search "${name}" query. Please try again.`);
         }
 
         // If it's first page
@@ -205,7 +216,7 @@ export function initRender(foundedPics, name, currentPage) {
                 Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
 
                 // Calcs pages
-                const numPages = Math.round(totalHits / PER_PAGE);
+                const numPages = Math.ceil(totalHits / PER_PAGE);                
 
                 // Remove blank pic
                 const gallery = document.querySelector(".gallery");

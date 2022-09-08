@@ -46,27 +46,25 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Post http req and trying to get pictures
-export function getPicturesByName(name, currentPage = 1) {
-        fetchPictures(name, currentPage)
-                .then((response) => {
-                        if (!response.ok) {
-                                throw new Error(response.status);
-                        }
+export async function getPicturesByName(name, currentPage = 1) {
+        // Send http req, trying get the pictures
+        const response = await fetchPictures(name, currentPage);
 
-                        return response.json();
-                })
+        console.log(response.status);
 
-                .then((foundedPics) => {
-                        try {
-                                // Initialization rendering gallery
-                                initRender(foundedPics, name, currentPage);
-                        } catch (error) {
-                                console.log(error);
-                                Notiflix.Notify.failure(error.message);
-                        }
-                })
+        if (!response.ok) {
+                Notiflix.Notify.failure(response.status);
+                throw new Error(response.status);
+        }
 
-                .catch(() => {
-                        Notiflix.Notify.failure("Oops, something was going wrong");
-                });
+        const foundedPics = await response.json();
+
+        console.log(foundedPics);
+
+        try {
+                // Initialization rendering gallery
+                initRender(foundedPics, name, currentPage);
+        } catch (error) {
+                Notiflix.Notify.failure(error.message);
+        }
 }
