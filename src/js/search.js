@@ -1,7 +1,6 @@
 import { fetchPictures } from "./fetch.js";
-import { PER_PAGE } from "./fetch.js";
 import Notiflix from "notiflix";
-import { renderPicsToGrid } from "./gallery";
+import { initRender } from "./gallery";
 
 // Wait the DOM is loaded
 document.addEventListener("DOMContentLoaded", function () {
@@ -47,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Post http req and trying to get pictures
-function getPicturesByName(name, page) {
+export function getPicturesByName(name, page = 1) {
         fetchPictures(name, page)
                 .then((response) => {
                         if (!response.ok) {
@@ -62,11 +61,6 @@ function getPicturesByName(name, page) {
                                 // Total founded pics on free account
                                 const { totalHits } = foundedPics;
 
-                                // Calc pages
-                                const pages = Math.round(totalHits / PER_PAGE);
-
-                                console.log(pages);
-
                                 // If nothing founded
                                 if (totalHits == 0) {
                                         throw new Error(`Images on the request ${name} not found`);
@@ -74,10 +68,12 @@ function getPicturesByName(name, page) {
 
                                 Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
 
-                                renderPicsToGrid(foundedPics, pages);
+                                console.log('START----------------');
+                                console.log(`getPicturesByName(${name}, ${page})`);
+
+                                initRender(foundedPics, totalHits, name, page);
                         } catch (error) {
                                 console.log(error);
-
                                 Notiflix.Notify.failure(error.message);
                         }
                 })

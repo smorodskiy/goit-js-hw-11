@@ -21,7 +21,7 @@ const DEBOUNCE_DELAY = 300;
 // downloads - кількість завантажень.
 
 // Fetch pictures by name
-export const fetchPictures = (name, page = 1) => {
+export const fetchPictures = (name, page) => {
 
         const param = new URLSearchParams({
                 key: API_KEY,
