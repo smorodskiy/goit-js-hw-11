@@ -112,20 +112,29 @@ function attachEventsToCardsIcons() {
         });
 }
 
-function attachToScrollAndPagination(name, currentPage, numPages) {
-        console.log("listening body");
+function doSmoothScroll() {
+        const { height: cardHeight } = document
+                .querySelector(".gallery")
+                .firstElementChild.getBoundingClientRect();
 
+        console.log(cardHeight);
+
+        console.log("SCROLLING");
+        window.scrollBy({
+                top: cardHeight * 2,
+                behavior: "smooth",
+        });
+}
+
+function attachToScrollAndPagination(name, currentPage, numPages) {
         // Check end of page and do pagination
         const isEndPageDebounced = debounce(() => {
                 if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
                         // Increment num of page
                         currentPage++;
 
-                        console.log(`currentPage: ${currentPage}`);
-                        
                         // Deattach pagination if endpage and return
                         if (currentPage > numPages) {
-                                console.log("END!");
                                 window.onscroll = null;
                                 return;
                         }
@@ -192,19 +201,14 @@ export function initRender(foundedPics, name, currentPage) {
 
         // If it's first page
         if (currentPage == 1) {
+                // Show succes message
                 Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
 
-                console.log("IF 1");
-
                 // Calcs pages
-                console.log(totalHits / PER_PAGE);
                 const numPages = Math.round(totalHits / PER_PAGE);
 
-                console.log(`pages: ${numPages}`);
-
-                const gallery = document.querySelector(".gallery");
-
                 // Remove blank pic
+                const gallery = document.querySelector(".gallery");
                 gallery.classList.remove("gallery--empty-page");
 
                 // Clear all gallery

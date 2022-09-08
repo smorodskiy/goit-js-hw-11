@@ -46,8 +46,8 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Post http req and trying to get pictures
-export function getPicturesByName(name, page = 1) {
-        fetchPictures(name, page)
+export function getPicturesByName(name, currentPage = 1) {
+        fetchPictures(name, currentPage)
                 .then((response) => {
                         if (!response.ok) {
                                 throw new Error(response.status);
@@ -58,11 +58,8 @@ export function getPicturesByName(name, page = 1) {
 
                 .then((foundedPics) => {
                         try {
-
-                                console.log('START----------------');
-                                console.log(`getPicturesByName(${name}, ${page})`);
-
-                                initRender(foundedPics, name, page);
+                                // Initialization rendering gallery
+                                initRender(foundedPics, name, currentPage);
                         } catch (error) {
                                 console.log(error);
                                 Notiflix.Notify.failure(error.message);
