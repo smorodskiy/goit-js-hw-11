@@ -1,11 +1,11 @@
 import { debounce } from "lodash";
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
+import Notiflix from "notiflix";
+
 import icons from "../images/icons.svg";
 import { getPicturesByName } from "../js/search";
 import { PER_PAGE } from "./fetch.js";
-
-let currentPage = 1;
 
 // Create instanse of SimpleBox
 const lightbox = new SimpleLightbox(".gallery a", {
@@ -112,25 +112,30 @@ function attachEventsToCardsIcons() {
         });
 }
 
-function pagenationAttach(name, pages) {
+function attachToScrollAndPagination(name, currentPage, numPages) {
         console.log("listening body");
 
-        const scrollDebounced = debounce(function (ev) {
+        // Check end of page and do pagination
+        const isEndPageDebounced = debounce(() => {
                 if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+                        // Increment num of page
                         currentPage++;
 
                         console.log(`currentPage: ${currentPage}`);
-                        if (currentPage > pages) {
+                        
+                        // Deattach pagination if endpage and return
+                        if (currentPage > numPages) {
                                 console.log("END!");
                                 window.onscroll = null;
                                 return;
                         }
 
+                        // Post req for next page
                         getPicturesByName(name, currentPage);
                 }
         }, 300);
 
-        window.onscroll = scrollDebounced;
+        window.onscroll = isEndPageDebounced;
 }
 
 // Clear gallery
@@ -176,17 +181,26 @@ function renderPicsToGrid(picsOfJSON) {
         gallery.innerHTML += galleryCards;
 }
 
-export function initRender(foundedPics, totalHits, name, page) {
-        console.log(`TESTT - ${page}`);
+export function initRender(foundedPics, name, currentPage) {
+        // Total founded pics on free account
+        const { totalHits } = foundedPics;
 
-        if (page == 1) {
+        // If nothing founded throw Message and return
+        if (totalHits == 0) {
+                throw new Error(`Images on the request ${name} not found`);
+        }
+
+        // If it's first page
+        if (currentPage == 1) {
+                Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+
                 console.log("IF 1");
 
                 // Calcs pages
                 console.log(totalHits / PER_PAGE);
-                const pages = Math.trunc(totalHits / PER_PAGE);
+                const numPages = Math.round(totalHits / PER_PAGE);
 
-                console.log(`pages: ${pages}`);
+                console.log(`pages: ${numPages}`);
 
                 const gallery = document.querySelector(".gallery");
 
@@ -196,14 +210,14 @@ export function initRender(foundedPics, totalHits, name, page) {
                 // Clear all gallery
                 clearGallery();
 
-                // Reset page counter
-                currentPage = 1;
+                // Deattach onScroll event
+                window.onscroll = null;
 
-                if (pages > 1)
-                pagenationAttach(name, pages);
+                // Add attach on scrolling and doing pagination if count of pages more than one
+                if (numPages > 1) attachToScrollAndPagination(name, currentPage, numPages);
         }
 
-        // Rendering first part of gallery
+        // Rendering part of gallery
         renderPicsToGrid(foundedPics);
 
         // Refresh simple box for new DOM

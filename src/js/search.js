@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
         searchElem.addEventListener("keydown", (e) => {
                 if (e.keyCode === 13) {
                         e.preventDefault();
-                        getPicturesByName(searchElem.value);
+                        getPicturesByName(searchElem.value, 1);
                 }
         });
 
@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // On button click
         goBtnElem.addEventListener("click", () => {
-                getPicturesByName(searchElem.value);
+                getPicturesByName(searchElem.value, 1);
         });
 });
 
@@ -58,20 +58,11 @@ export function getPicturesByName(name, page = 1) {
 
                 .then((foundedPics) => {
                         try {
-                                // Total founded pics on free account
-                                const { totalHits } = foundedPics;
-
-                                // If nothing founded
-                                if (totalHits == 0) {
-                                        throw new Error(`Images on the request ${name} not found`);
-                                }
-
-                                Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
 
                                 console.log('START----------------');
                                 console.log(`getPicturesByName(${name}, ${page})`);
 
-                                initRender(foundedPics, totalHits, name, page);
+                                initRender(foundedPics, name, page);
                         } catch (error) {
                                 console.log(error);
                                 Notiflix.Notify.failure(error.message);
