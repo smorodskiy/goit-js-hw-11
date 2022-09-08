@@ -131,7 +131,7 @@ function doSmoothScroll() {
 function attachToScrollAndPagination(name, currentPage, numPages) {
         // Check end of page and do pagination
         const isEndPageDebounced = debounce(() => {
-                if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+                if (window.innerHeight + window.scrollY >= document.body.scrollHeight) {
                         // Increment num of page
                         currentPage++;
 

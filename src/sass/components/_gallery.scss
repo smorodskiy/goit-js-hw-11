@@ -2,6 +2,8 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     // grid-auto-rows: 380px;
+    // grid-auto-rows: repeat(minmax(320px, 1fr));
+    grid-auto-rows: 1fr;
     grid-gap: 12px;
     justify-content: center;
     margin-left: auto;
@@ -10,16 +12,7 @@
     &__link {
         display: flex;
         text-decoration: none;
-        height: 100%;
-    }
-
-    &__image {
-        transition: transform var(--animation-duration) var(--timing-function);
-    }
-
-    &__image:hover {
-        transform: scale(1.03);
-        cursor: zoom-in;
+        height: calc(100% - 70px);
     }
 
     &__card {
@@ -36,6 +29,12 @@
         height: 100%;
         width: 100%;
         object-fit: cover;
+        transition: transform var(--animation-duration) var(--timing-function);
+    }
+
+    &__image:hover {
+        transform: scale(1.03);
+        cursor: zoom-in;
     }
 
     &__info {
