@@ -115,8 +115,10 @@ function attachEventsToCardsIcons() {
 // Smooth scrolling for pagination
 function doSmoothScroll(loadingHeight) {
         const container = document.querySelector(".container");
-              
-        const paddingBottom = window.getComputedStyle(container, null).getPropertyValue('padding-bottom')  
+
+        const paddingBottom = window
+                .getComputedStyle(container, null)
+                .getPropertyValue("padding-bottom");
 
         window.scrollBy({
                 top: window.innerHeight - loadingHeight - parseInt(paddingBottom),
@@ -208,7 +210,6 @@ function clearGallery() {
 // Rendering founded pictures to grid
 function renderPicsToGrid(picsOfJSON) {
         const gallery = document.querySelector(".gallery");
-
         const { hits } = picsOfJSON;
 
         // Remap json to HTML elements
