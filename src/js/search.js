@@ -50,16 +50,17 @@ export async function getPicturesByName(name, currentPage = 1) {
         // Send http req, trying get the pictures
         const response = await fetchPictures(name, currentPage);
 
-        console.log(response.status);
+        // console.log(response.status);
 
         if (!response.ok) {
                 Notiflix.Notify.failure(response.status);
                 throw new Error(response.status);
         }
 
+        // Get JSON of pictures
         const foundedPics = await response.json();
 
-        console.log(foundedPics);
+        // console.log(foundedPics);
 
         try {
                 // Initialization rendering gallery
