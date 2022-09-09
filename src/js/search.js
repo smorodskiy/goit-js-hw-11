@@ -47,25 +47,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Post http req and trying to get pictures
 export async function getPicturesByName(name, currentPage = 1) {
-        // Send http req, trying get the pictures
-        const response = await fetchPictures(name, currentPage);
-
-        // console.log(response.status);
-
-        if (!response.ok) {
-                Notiflix.Notify.failure(response.status);
-                throw new Error(response.status);
-        }
-
-        // Get JSON of pictures
-        const foundedPics = await response.json();
-
-        // console.log(foundedPics);
-
         try {
+                // Send http req, trying get the pictures
+                const response = await fetchPictures(name, currentPage);
+
+                // console.log(response);
+
+                if (response.status != 200) {
+                        Notiflix.Notify.failure(response.status);
+                        throw new Error(response.status);
+                }
+
+                if (response.data == undefined) {
+                        Notiflix.Notify.failure('Incorrect data');
+                        throw new Error('Incorrect data');
+                }
+
+                // Get JSON of pictures
+                const foundedPics = response.data;
+                
+                // console.log(foundedPics);
+
                 // Initialization rendering gallery
                 initRender(foundedPics, name, currentPage);
         } catch (error) {
+                console.log(error);
                 Notiflix.Notify.failure(error.message);
         }
 }
