@@ -127,38 +127,50 @@ function doSmoothScroll() {
         });
 }
 
+function showWaitingLabel(bool) {
+        const container = document.querySelector(".container");
+
+        if (bool) {
+                container.insertAdjacentHTML("beforeend", '<div class="container__loading">Loading....</div>');
+                window.scrollTo(0, document.body.scrollHeight);
+        } else {
+                const loading = document.querySelector(".container__loading");
+                loading.remove();
+        }
+}
+
 // Attach to window.scroll
 function attachToScrollAndPagination(name, currentPage, numPages) {
         // Check end of page and do pagination
         const isEndPageDebounced = debounce(() => {
-                // Notiflix.Notify.info(`scrollHeight: ${document.body.scrollHeight}
-                // ,
-                // height: ${window.innerHeight} + Y: ${Math.trunc(window.scrollY)},
-                // sum: ${window.innerHeight + Math.trunc(window.scrollY)};
-                // `);
                 if (Math.round(window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
+                        // Temp deattach                        
+                        window.onscroll = null;
+
                         // Increment num of page
                         currentPage++;
 
                         // Deattach pagination if endpage and return
                         if (currentPage > numPages) {
                                 // Show end message
-                                Notiflix.Notify.success(`You've reached the end of search results.`);
-                                window.onscroll = null;
+                                Notiflix.Notify.success(
+                                        `You've reached the end of search results.`,
+                                );                                
                                 return;
                         }
 
                         // Post req for next page and doing smooth scroll
                         // Wait async get... func
                         (async () => {
+                                await showWaitingLabel(true);
                                 await getPicturesByName(name, currentPage);
-                                doSmoothScroll()
+                                showWaitingLabel(false);
+                                doSmoothScroll();
+                                window.onscroll = isEndPageDebounced;
                         })();
-                                                
-                        
                 }
         }, 300);
-
+        
         window.onscroll = isEndPageDebounced;
 }
 
@@ -212,7 +224,9 @@ export function initRender(foundedPics, name, currentPage) {
 
         // If nothing founded throw Message and return
         if (totalHits == 0) {
-                throw new Error(`Sorry, there are no images matching your search "${name}" query. Please try again.`);
+                throw new Error(
+                        `Sorry, there are no images matching your search "${name}" query. Please try again.`,
+                );
         }
 
         // If it's first page
@@ -221,7 +235,7 @@ export function initRender(foundedPics, name, currentPage) {
                 Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
 
                 // Calcs pages
-                const numPages = Math.ceil(totalHits / PER_PAGE);                
+                const numPages = Math.ceil(totalHits / PER_PAGE);
 
                 // Remove blank pic
                 const gallery = document.querySelector(".gallery");
