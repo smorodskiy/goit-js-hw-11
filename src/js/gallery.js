@@ -8,7 +8,7 @@ import { getPicturesByName } from "../js/search";
 import { PER_PAGE } from "./fetch.js";
 
 // Create instanse of SimpleBox
-const lightbox = new SimpleLightbox(".gallery a", {
+const lightbox = new SimpleLightbox(".gallery .gallery__link", {
         captions: true,
         captionType: "attr",
         captionsData: "alt",
@@ -237,7 +237,7 @@ export function initRender(foundedPics, name, currentPage) {
 
         // Refresh simple box for new DOM
         lightbox.refresh();
-
+                
         // Attach events on cards buttons
         attachEventsToCardsIcons();
 }
