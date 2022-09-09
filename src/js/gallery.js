@@ -133,8 +133,8 @@ function attachToScrollAndPagination(name, currentPage, numPages) {
         const isEndPageDebounced = debounce(() => {
                 Notiflix.Notify.info(`scrollHeight: ${document.body.scrollHeight}
                 ,
-                height: ${window.innerHeight} + Y: ${window.scrollY},
-                sum: ${window.innerHeight + window.scrollY};
+                height: ${window.innerHeight} + Y: ${Math.trunc(window.scrollY)},
+                sum: ${window.innerHeight + Math.trunc(window.scrollY)};
                 `);
                 if (window.innerHeight + window.scrollY >= document.body.scrollHeight) {
                         // Increment num of page
