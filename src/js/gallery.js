@@ -127,11 +127,15 @@ function doSmoothScroll() {
         });
 }
 
-function showWaitingLabel(bool) {
+// Loading... label
+function showWaitingLabel(show) {
         const container = document.querySelector(".container");
 
-        if (bool) {
-                container.insertAdjacentHTML("beforeend", '<div class="container__loading">Loading....</div>');
+        if (show) {
+                container.insertAdjacentHTML(
+                        "beforeend",
+                        '<div class="container__loading">Loading....</div>',
+                );
                 window.scrollTo(0, document.body.scrollHeight);
         } else {
                 const loading = document.querySelector(".container__loading");
@@ -139,12 +143,30 @@ function showWaitingLabel(bool) {
         }
 }
 
+// Next page of pagination
+async function nextRequestPartPagination(name, currentPage, isEndPageDebounced) {
+        // Show waiting label
+        showWaitingLabel(true);
+
+        // Send request for next pages pictures
+        await getPicturesByName(name, currentPage);
+
+        // Hide waiting label
+        showWaitingLabel(false);
+
+        // Do smooth scroll
+        doSmoothScroll();
+
+        // Attach scroll event
+        window.onscroll = isEndPageDebounced;
+}
+
 // Attach to window.scroll
-function attachToScrollAndPagination(name, currentPage, numPages) {
+function scrollEvent(name, currentPage, numPages) {
         // Check end of page and do pagination
         const isEndPageDebounced = debounce(() => {
                 if (Math.round(window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
-                        // Temp deattach                        
+                        // Temp deattach
                         window.onscroll = null;
 
                         // Increment num of page
@@ -155,22 +177,16 @@ function attachToScrollAndPagination(name, currentPage, numPages) {
                                 // Show end message
                                 Notiflix.Notify.success(
                                         `You've reached the end of search results.`,
-                                );                                
+                                );
                                 return;
                         }
 
                         // Post req for next page and doing smooth scroll
-                        // Wait async get... func
-                        (async () => {
-                                await showWaitingLabel(true);
-                                await getPicturesByName(name, currentPage);
-                                showWaitingLabel(false);
-                                doSmoothScroll();
-                                window.onscroll = isEndPageDebounced;
-                        })();
+                        nextRequestPartPagination(name, currentPage, isEndPageDebounced);
                 }
         }, 300);
-        
+
+        // Attach func on scroll event
         window.onscroll = isEndPageDebounced;
 }
 
@@ -248,7 +264,7 @@ export function initRender(foundedPics, name, currentPage) {
                 window.onscroll = null;
 
                 // Add attach on scrolling and doing pagination if count of pages more than one
-                if (numPages > 1) attachToScrollAndPagination(name, currentPage, numPages);
+                if (numPages > 1) scrollEvent(name, currentPage, numPages);
         }
 
         // Rendering part of gallery
