@@ -131,6 +131,7 @@ function doSmoothScroll() {
 function attachToScrollAndPagination(name, currentPage, numPages) {
         // Check end of page and do pagination
         const isEndPageDebounced = debounce(() => {
+                Notiflix.Notify.info(`${document.body.scrollHeight}`);
                 if (window.innerHeight + window.scrollY >= document.body.scrollHeight) {
                         // Increment num of page
                         currentPage++;
@@ -237,7 +238,7 @@ export function initRender(foundedPics, name, currentPage) {
 
         // Refresh simple box for new DOM
         lightbox.refresh();
-                
+
         // Attach events on cards buttons
         attachEventsToCardsIcons();
 }
