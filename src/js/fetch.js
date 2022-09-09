@@ -1,10 +1,10 @@
 import { debounce } from "lodash";
+import axios from "axios";
 
 const URL = "https://pixabay.com/api/";
 const API_KEY = "29730166-90781f613c54edfa0d110c161";
 export const PER_PAGE = 40;
 const DEBOUNCE_DELAY = 300;
-
 
 // key - твій унікальний ключ доступу до API.
 // q - термін для пошуку. Те, що буде вводити користувач.
@@ -22,7 +22,6 @@ const DEBOUNCE_DELAY = 300;
 
 // Fetch pictures by name
 export const fetchPictures = async (name, page) => {
-
         const param = new URLSearchParams({
                 key: API_KEY,
                 q: name,
@@ -34,12 +33,13 @@ export const fetchPictures = async (name, page) => {
         });
 
         const fetched = () => {
-                console.log(`${URL}?${param.toString()}`);
-                return fetch(`${URL}?${param.toString()}`, {
-                        headers: {
-                                Accept: "application/json",
-                        },
-                });
+                console.log(`${URL}?${param.toString()}`);                
+                return axios.get(`${URL}?${param.toString()}`);
+                // return fetch(`${URL}?${param.toString()}`, {
+                //         headers: {
+                //                 Accept: "application/json",
+                //         },
+                // });
         };
 
         const debouncedFetch = asyncDebounce(fetched, DEBOUNCE_DELAY);
