@@ -113,18 +113,25 @@ function attachEventsToCardsIcons() {
 }
 
 // Smooth scrolling for pagination
-function doSmoothScroll() {
-        const { height: cardHeight } = document
-                .querySelector(".gallery")
-                .firstElementChild.getBoundingClientRect();
+function doSmoothScroll(loadingHeight) {
+        const container = document.querySelector(".container");
+              
+        const paddingBottom = window.getComputedStyle(container, null).getPropertyValue('padding-bottom')  
 
-        console.log(cardHeight);
-
-        console.log("SCROLLING");
         window.scrollBy({
-                top: cardHeight * 2,
+                top: window.innerHeight - loadingHeight - parseInt(paddingBottom),
                 behavior: "smooth",
         });
+}
+
+function getAbsoluteHeight(el) {
+        // Get the DOM Node if you pass in a string
+        el = typeof el === "string" ? document.querySelector(el) : el;
+
+        const styles = window.getComputedStyle(el);
+        const margin = parseFloat(styles["marginTop"]) + parseFloat(styles["marginBottom"]);
+
+        return Math.ceil(el.offsetHeight + margin);
 }
 
 // Loading... label
@@ -139,7 +146,15 @@ function showWaitingLabel(show) {
                 window.scrollTo(0, document.body.scrollHeight);
         } else {
                 const loading = document.querySelector(".container__loading");
+
+                // Get loading div's size
+                const loadingHeight = getAbsoluteHeight(
+                        document.querySelector(".container__loading"),
+                );
+
                 loading.remove();
+
+                return loadingHeight;
         }
 }
 
@@ -150,12 +165,6 @@ async function nextRequestPartPagination(name, currentPage, isEndPageDebounced) 
 
         // Send request for next pages pictures
         await getPicturesByName(name, currentPage);
-
-        // Hide waiting label
-        showWaitingLabel(false);
-
-        // Do smooth scroll
-        doSmoothScroll();
 
         // Attach scroll event
         window.onscroll = isEndPageDebounced;
@@ -265,10 +274,21 @@ export function initRender(foundedPics, name, currentPage) {
 
                 // Add attach on scrolling and doing pagination if count of pages more than one
                 if (numPages > 1) scrollEvent(name, currentPage, numPages);
+
+                // Rendering part of gallery
+                renderPicsToGrid(foundedPics);
         }
 
-        // Rendering part of gallery
-        renderPicsToGrid(foundedPics);
+        if (currentPage > 1) {
+                // Hide waiting label
+                const loadingHeight = showWaitingLabel(false);
+
+                // Rendering part of gallery
+                renderPicsToGrid(foundedPics);
+
+                // Do smooth scroll
+                doSmoothScroll(loadingHeight);
+        }
 
         // Refresh simple box for new DOM
         lightbox.refresh();
