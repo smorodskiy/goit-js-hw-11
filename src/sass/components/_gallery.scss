@@ -79,12 +79,14 @@
     }
 
     &--empty-page::after {
-        content: "";
+        content: "";        
         height: calc(100vh - 200px);
+        // height: var(--height, 0);
         background-image: url(../images/no-image.png);
         background-repeat: no-repeat;
         background-size: 150px;
         background-position: center;
         display: block;
+        // background-color: #212121;
     }
 }

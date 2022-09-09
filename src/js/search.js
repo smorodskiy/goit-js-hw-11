@@ -1,6 +1,9 @@
 import { fetchPictures } from "./fetch.js";
+import { debounce } from "lodash";
 import Notiflix from "notiflix";
 import { initRender } from "./gallery";
+
+export const DEBOUNCE_DELAY = 300;
 
 // Wait the DOM is loaded
 document.addEventListener("DOMContentLoaded", function () {
@@ -16,16 +19,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 searchIconElem.classList.add("search__find-icon--rotate");
         });
 
-        // On take focus off
+        // On take Focus off
         searchElem.addEventListener("blur", () => {
                 searchBoxElem.classList.remove("search__box--searching");
                 searchIconElem.classList.remove("search__find-icon--rotate");
         });
 
+        // On Enter click
         searchElem.addEventListener("keydown", (e) => {
                 if (e.keyCode === 13) {
                         e.preventDefault();
-                        getPicturesByName(searchElem.value, 1);
+                        getPicturesByName_deb(searchElem.value, 1);
                 }
         });
 
@@ -41,12 +45,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // On button click
         goBtnElem.addEventListener("click", () => {
-                getPicturesByName(searchElem.value, 1);
+                getPicturesByName_deb(searchElem.value, 1);
         });
 });
 
 // Post http req and trying to get pictures
-export async function getPicturesByName(name, currentPage = 1) {
+async function getPicturesByName(name, currentPage = 1) {
         try {
                 // Send http req, trying get the pictures
                 const response = await fetchPictures(name, currentPage);
@@ -59,13 +63,13 @@ export async function getPicturesByName(name, currentPage = 1) {
                 }
 
                 if (response.data == undefined) {
-                        Notiflix.Notify.failure('Incorrect data');
-                        throw new Error('Incorrect data');
+                        Notiflix.Notify.failure("Incorrect data");
+                        throw new Error("Incorrect data");
                 }
 
                 // Get JSON of pictures
                 const foundedPics = response.data;
-                
+
                 // console.log(foundedPics);
 
                 // Initialization rendering gallery
@@ -75,3 +79,7 @@ export async function getPicturesByName(name, currentPage = 1) {
                 Notiflix.Notify.failure(error.message);
         }
 }
+
+export const getPicturesByName_deb = debounce((name, currentPage)=>{
+        getPicturesByName(name, currentPage);
+}, DEBOUNCE_DELAY);

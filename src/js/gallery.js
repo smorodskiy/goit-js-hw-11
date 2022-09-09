@@ -4,8 +4,22 @@ import "simplelightbox/dist/simple-lightbox.min.css";
 import Notiflix from "notiflix";
 
 import icons from "../images/icons.svg";
-import { getPicturesByName } from "../js/search";
+import { getPicturesByName_deb } from "../js/search";
 import { PER_PAGE } from "./fetch.js";
+
+let numPages = 1;
+
+// Init Notiflix params
+Notiflix.Notify.init({
+        ID: "NotiflixNotify",
+        className: "notiflix-notify",
+        // width: "280px",
+        position: "right-top",
+        // distance: "100px",
+        clickToClose: true,
+        cssAnimationStyle: "zoom",
+        // closeButton: true,
+});
 
 // Create instanse of SimpleBox
 const lightbox = new SimpleLightbox(".gallery .gallery__link", {
@@ -121,11 +135,15 @@ function doSmoothScroll(loadingHeight) {
                 .getPropertyValue("padding-bottom");
 
         window.scrollBy({
-                top: window.innerHeight - loadingHeight - parseInt(paddingBottom),
+                top:
+                        document.documentElement.clientHeight -
+                        loadingHeight -
+                        parseInt(paddingBottom),
                 behavior: "smooth",
         });
 }
 
+// Get absolute height of element
 function getAbsoluteHeight(el) {
         // Get the DOM Node if you pass in a string
         el = typeof el === "string" ? document.querySelector(el) : el;
@@ -143,7 +161,16 @@ function showWaitingLabel(show) {
         if (show) {
                 container.insertAdjacentHTML(
                         "beforeend",
-                        '<div class="container__loading">Loading....</div>',
+                        `
+                        
+                        <div class="container__loading">
+                                <div class="container__yellow"></div>
+                                <div class="container__red"></div>
+                                <div class="container__blue"></div>
+                                <div class="container__violet"></div>
+                        </div>
+                        
+                        `,
                 );
                 window.scrollTo(0, document.body.scrollHeight);
         } else {
@@ -160,46 +187,36 @@ function showWaitingLabel(show) {
         }
 }
 
-// Next page of pagination
-async function nextRequestPartPagination(name, currentPage, isEndPageDebounced) {
-        // Show waiting label
-        showWaitingLabel(true);
+// Check end of page and do pagination
+function scrollPagination(name, currentPage) {
+        // If position is end of page
+        if (Math.round(window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
+                // Temp deattach
+                window.onscroll = null;
 
-        // Send request for next pages pictures
-        await getPicturesByName(name, currentPage);
+                // Increment num of page
+                currentPage++;
 
-        // Attach scroll event
-        window.onscroll = isEndPageDebounced;
-}
-
-// Attach to window.scroll
-function scrollEvent(name, currentPage, numPages) {
-        // Check end of page and do pagination
-        const isEndPageDebounced = debounce(() => {
-                if (Math.round(window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
-                        // Temp deattach
-                        window.onscroll = null;
-
-                        // Increment num of page
-                        currentPage++;
-
-                        // Deattach pagination if endpage and return
-                        if (currentPage > numPages) {
-                                // Show end message
-                                Notiflix.Notify.success(
-                                        `You've reached the end of search results.`,
-                                );
-                                return;
-                        }
-
-                        // Post req for next page and doing smooth scroll
-                        nextRequestPartPagination(name, currentPage, isEndPageDebounced);
+                // Deattach pagination if it's last page of pictures
+                if (currentPage > numPages) {
+                        // Show end message
+                        Notiflix.Notify.success(`You've reached the end of search results.`);
+                        return;
                 }
-        }, 300);
 
-        // Attach func on scroll event
-        window.onscroll = isEndPageDebounced;
+                // Show waiting label
+                showWaitingLabel(true);
+
+                setTimeout(() => {
+                        // Send request for next pages pictures
+                        getPicturesByName_deb(name, currentPage);
+                }, 3000);
+        }
 }
+
+// Scroll pagination debounced func
+const scrollPagination_deb = (name, currentPage) =>
+        debounce(() => scrollPagination(name, currentPage), 100);
 
 // Clear gallery
 function clearGallery() {
@@ -261,7 +278,7 @@ export function initRender(foundedPics, name, currentPage) {
                 Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
 
                 // Calcs pages
-                const numPages = Math.ceil(totalHits / PER_PAGE);
+                numPages = Math.ceil(totalHits / PER_PAGE);
 
                 // Remove blank pic
                 const gallery = document.querySelector(".gallery");
@@ -274,7 +291,7 @@ export function initRender(foundedPics, name, currentPage) {
                 window.onscroll = null;
 
                 // Add attach on scrolling and doing pagination if count of pages more than one
-                if (numPages > 1) scrollEvent(name, currentPage, numPages);
+                if (numPages > 1) window.onscroll = scrollPagination_deb(name, currentPage);
 
                 // Rendering part of gallery
                 renderPicsToGrid(foundedPics);
@@ -289,6 +306,9 @@ export function initRender(foundedPics, name, currentPage) {
 
                 // Do smooth scroll
                 doSmoothScroll(loadingHeight);
+
+                // Attach scroll event
+                window.onscroll = scrollPagination_deb(name, currentPage);
         }
 
         // Refresh simple box for new DOM
