@@ -131,7 +131,11 @@ function doSmoothScroll() {
 function attachToScrollAndPagination(name, currentPage, numPages) {
         // Check end of page and do pagination
         const isEndPageDebounced = debounce(() => {
-                Notiflix.Notify.info(`${document.body.scrollHeight}`);
+                Notiflix.Notify.info(`scrollHeight: ${document.body.scrollHeight}
+                ,
+                height: ${window.innerHeight} + Y: ${window.scrollY},
+                sum: ${window.innerHeight + window.scrollY};
+                `);
                 if (window.innerHeight + window.scrollY >= document.body.scrollHeight) {
                         // Increment num of page
                         currentPage++;
