@@ -44,9 +44,12 @@ function createGalleryCard(
         const galleryCard = `
         
         <div class="gallery__card">
-                <a class="gallery__link" href="${largeImageURL}">
+                
+                <a class="gallery__link pulse" href="${largeImageURL}">
                         <img class="gallery__image" src="${webformatURL}" alt="${tags}" loading="lazy" />
                 </a>
+                       
+                
                 <ul class="gallery__info">
                         <li class="gallery__item">
                                 <b>Likes</b>
@@ -210,7 +213,7 @@ function scrollPagination(name, currentPage) {
                 setTimeout(() => {
                         // Send request for next pages pictures
                         getPicturesByName_deb(name, currentPage);
-                }, 3000);
+                }, 1000);
         }
 }
 
@@ -257,8 +260,32 @@ function renderPicsToGrid(picsOfJSON) {
                 .join("");
 
         // Append new photos to DOM
-        gallery.innerHTML += galleryCards;
+        gallery.insertAdjacentHTML("beforeend", galleryCards);
+
+        // Remove skelete of cards
+        removeSkelets(gallery);
 }
+
+// Remove skeletes from cards
+function removeSkelets(galleryElem) {
+        // Get all links
+        const links = galleryElem.querySelectorAll(".gallery__link.pulse");
+        // Remove pulse from each link and add loaded mark on img
+        links.forEach((link) => {
+                const img = link.firstElementChild;
+                img.onload = () => {
+                        setTimeout(() => {
+                                img.classList.add("loadable");
+                                link.classList.remove("pulse");
+                        }, getRndInteger(100, 1000));
+                };
+        });
+}
+
+// Random nums
+function getRndInteger(min, max) {
+        return Math.floor(Math.random() * (max - min) ) + min;
+      }
 
 // Initialization render gallery
 export function initRender(foundedPics, name, currentPage) {

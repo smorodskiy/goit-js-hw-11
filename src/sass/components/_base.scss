@@ -4,15 +4,15 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     line-height: 2;
+    background-color: #fff;
     // @include fonts(15px, 30px, 400, 0.04em);
 }
 
+// Notiflix
 // .notiflix-notify {
 #NotiflixNotifyWrap {
     @media screen and (max-width: 980px) {
-        // top: 80px !important;
         margin: auto !important;
         inset: 82px 10px auto !important;
-        // left: calc(-50% - 280px) !important;
     }
 }
