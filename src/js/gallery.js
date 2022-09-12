@@ -1,11 +1,9 @@
 import { debounce } from "lodash";
-import SimpleLightbox from "simplelightbox";
-import "simplelightbox/dist/simple-lightbox.min.css";
 import Notiflix from "notiflix";
-
 import icons from "../images/icons.svg";
 import { getPicturesByName_deb } from "../js/search";
 import { PER_PAGE } from "./fetch.js";
+import { lightbox, lightboxUpdateDownloadButton } from "./lightbox";
 
 let numPages = 1;
 
@@ -21,15 +19,6 @@ Notiflix.Notify.init({
         // closeButton: true,
 });
 
-// Create instanse of SimpleBox
-const lightbox = new SimpleLightbox(".gallery .gallery__link", {
-        captions: true,
-        captionType: "attr",
-        captionsData: "alt",
-        captionPosition: "bottom",
-        captionDelay: 250,
-});
-
 // Create box of image
 function createGalleryCard(
         pageURL,
@@ -43,13 +32,12 @@ function createGalleryCard(
 ) {
         const galleryCard = `
         
-        <div class="gallery__card">
+        <div class="gallery__card new">
                 
-                <a class="gallery__link pulse" href="${largeImageURL}">
+                <a class="gallery__link" href="${largeImageURL}">
                         <img class="gallery__image" src="${webformatURL}" alt="${tags}" loading="lazy" />
                 </a>
-                       
-                
+        
                 <ul class="gallery__info">
                         <li class="gallery__item">
                                 <b>Likes</b>
@@ -116,11 +104,10 @@ function onLikeBtn(btn) {
 }
 
 // Events on click buttons in cards
-function attachEventsToCardsIcons() {
-        const icons = document.querySelectorAll(".gallery__icon-wrapper");
-
-        icons.forEach((icon) => {
-                icon.addEventListener("click", (e) => {
+function attachEventsToCardsIcons(newCards) {
+        newCards.forEach((card) => {
+                const icons = card.querySelector(".gallery__icon-wrapper");
+                icons.addEventListener("click", (e) => {
                         const btn = e.currentTarget;
                         if (btn.getAttribute("data") == "likes") {
                                 onLikeBtn(btn);
@@ -158,7 +145,7 @@ function getAbsoluteHeight(el) {
 }
 
 // Loading... label
-function showWaitingLabel(show) {
+function showLoading(show) {
         const container = document.querySelector(".container");
 
         if (show) {
@@ -166,23 +153,21 @@ function showWaitingLabel(show) {
                         "beforeend",
                         `
                         
-                        <div class="container__loading">
-                                <div class="container__yellow"></div>
-                                <div class="container__red"></div>
-                                <div class="container__blue"></div>
-                                <div class="container__violet"></div>
+                        <div class="loading">
+                                <div class="loading__yellow"></div>
+                                <div class="loading__red"></div>
+                                <div class="loading__blue"></div>
+                                <div class="loading__violet"></div>
                         </div>
                         
                         `,
                 );
                 window.scrollTo(0, document.body.scrollHeight);
         } else {
-                const loading = document.querySelector(".container__loading");
+                const loading = document.querySelector(".loading");
 
                 // Get loading div's size
-                const loadingHeight = getAbsoluteHeight(
-                        document.querySelector(".container__loading"),
-                );
+                const loadingHeight = getAbsoluteHeight(document.querySelector(".loading"));
 
                 loading.remove();
 
@@ -208,7 +193,7 @@ function scrollPagination(name, currentPage) {
                 }
 
                 // Show waiting label
-                showWaitingLabel(true);
+                showLoading(true);
 
                 setTimeout(() => {
                         // Send request for next pages pictures
@@ -262,21 +247,27 @@ function renderPicsToGrid(picsOfJSON) {
         // Append new photos to DOM
         gallery.insertAdjacentHTML("beforeend", galleryCards);
 
+        // Get all new cards
+        const newCards = gallery.querySelectorAll(".gallery__card.new");
+
         // Remove skelete of cards
-        removeSkelets(gallery);
+        removeSkelets(newCards);
+
+        return newCards;
 }
 
+// !!!!!!!!!!!!!!!!!!!!
 // Remove skeletes from cards
-function removeSkelets(galleryElem) {
-        // Get all links
-        const links = galleryElem.querySelectorAll(".gallery__link.pulse");
-        // Remove pulse from each link and add loaded mark on img
-        links.forEach((link) => {
+function removeSkelets(newCards) {
+        // Remove skelet effect from each link and add loaded mark on img
+        newCards.forEach((card) => {
+                const link = card.firstElementChild;
                 const img = link.firstElementChild;
                 img.onload = () => {
                         setTimeout(() => {
-                                img.classList.add("loadable");
+                                card.classList.remove("new");
                                 link.classList.remove("pulse");
+                                link.classList.add("loadable");
                         }, getRndInteger(100, 1000));
                 };
         });
@@ -284,8 +275,8 @@ function removeSkelets(galleryElem) {
 
 // Random nums
 function getRndInteger(min, max) {
-        return Math.floor(Math.random() * (max - min) ) + min;
-      }
+        return Math.floor(Math.random() * (max - min)) + min;
+}
 
 // Initialization render gallery
 export function initRender(foundedPics, name, currentPage) {
@@ -317,19 +308,19 @@ export function initRender(foundedPics, name, currentPage) {
                 // Deattach onScroll event
                 window.onscroll = null;
 
-                // Add attach on scrolling and doing pagination if count of pages more than one
-                if (numPages > 1) window.onscroll = scrollPagination_deb(name, currentPage);
-
                 // Rendering part of gallery
-                renderPicsToGrid(foundedPics);
+                var newCards = renderPicsToGrid(foundedPics);
+
+                // Add attach on scrolling and doing pagination if num of pages more than one
+                if (numPages > 1) window.onscroll = scrollPagination_deb(name, currentPage);
         }
 
         if (currentPage > 1) {
-                // Hide waiting label
-                const loadingHeight = showWaitingLabel(false);
+                // Hide waiting label and get label height
+                const loadingHeight = showLoading(false);
 
                 // Rendering part of gallery
-                renderPicsToGrid(foundedPics);
+                var newCards = renderPicsToGrid(foundedPics);
 
                 // Do smooth scroll
                 doSmoothScroll(loadingHeight);
@@ -341,6 +332,9 @@ export function initRender(foundedPics, name, currentPage) {
         // Refresh simple box for new DOM
         lightbox.refresh();
 
+        // Update href for Download button
+        lightboxUpdateDownloadButton();
+
         // Attach events on cards buttons
-        attachEventsToCardsIcons();
+        attachEventsToCardsIcons(newCards);
 }
