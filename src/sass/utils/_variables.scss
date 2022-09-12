@@ -1,4 +1,20 @@
 :root {
-  --timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  --animation-duration: 250ms;
+    --timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    --animation-duration: 250ms;
+
+    // Search
+    --bgColor: linear-gradient(83.2deg, rgba(150, 93, 233, 1) 10.8%, rgba(99, 88, 238, 1) 94.3%);
+    --buttons-color: #fff;
+    --border-color: #fff;
+    --font-color: #fff;
+    --placeholder-color: #fff;
+    --selection-color: #fff;
+    --selection-bg-color: rgba(0, 0, 0, 0.25);
+
+    // Gallery
+    --rows-size: 320px;
+    --icons-hover: rgb(63, 87, 179);
+    // Icons panel
+    --icons-font-size: 12px;
+    --icons-font-color: #212121;
 }
