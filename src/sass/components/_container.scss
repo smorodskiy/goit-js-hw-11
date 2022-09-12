@@ -1,81 +1,18 @@
-:root {
-	--yellow: #feb60a;
-	--red: #ff0062;
-	--blue: #00dbf9;
-	--violet: #da00f7;
-}
-
 .container {
-  min-width: 320px;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 20px;
-  
-  @media screen and (max-width: 767px) {
-    // width: 320px;
-    // padding: 20px;
-  }
-  @media screen and (min-width: 768px) {
-    // width: 768px;
-    // padding: 0px 20px;
-  }
-  @media screen and (min-width: 1200px) {
-    // width: 1200px;
-  }
+    min-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
 
-  &__loading {
-    // display: flex;
-    // justify-content: center;
-    // align-items: center;
-    // font-size: 30px;
-    // margin-top: 12px;    
-    // padding: 40px;
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  &__loading > div {    
-    width: 3vw;
-    height: 3vw;
-    border-radius: 100%;
-    margin: 2vw;
-    background-image: linear-gradient(145deg, rgba(255,255,255,0.5) 0%, rgba(0,0,0,0) 100%);
-    animation: bounce 1.5s 0.5s linear infinite;
-  }
-  &__yellow {
-    background-color: var(--yellow);
-  }
-  
-  &__red {
-    background-color: var(--red);
-    animation-delay: 0.1s;
-  }
-  
-  &__blue {
-    background-color: var(--blue);
-    animation-delay: 0.2s;
-  }
-  
-  &__violet {
-    background-color: var(--violet);
-    animation-delay: 0.3s;
-  }
-  
-  @keyframes bounce {
-    0%, 50%, 100% {
-      transform: scale(1);
-      filter: blur(0px);
+    @media screen and (max-width: 767px) {
+        // width: 320px;
+        // padding: 20px;
     }
-    25% {
-      transform: scale(0.6);
-      filter: blur(3px);
+    @media screen and (min-width: 768px) {
+        // width: 768px;
+        // padding: 0px 20px;
     }
-    75% {
-      filter: blur(3px);
-      transform: scale(1.4);
+    @media screen and (min-width: 1200px) {
+        // width: 1200px;
     }
-  }
-
 }
