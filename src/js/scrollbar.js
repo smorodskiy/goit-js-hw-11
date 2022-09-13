@@ -170,8 +170,7 @@ export const customScrollbar = function () {
                 } else {
                         scrollbar = document.querySelector("figure");
                 }
-
-                console.log(window);
+                
                 setScrollSize();
 
                 // Listen for scroll
