@@ -147,7 +147,7 @@ export const customScrollbar = function () {
                                                         body.scrollHeight
                                                 ).toFixed(2) +
                                         "%";
-                        },
+                        };
                         body = document.querySelector(".custom-scrollbar");
 
                 if (!document.querySelector("figure")) {

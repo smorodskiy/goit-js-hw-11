@@ -339,10 +339,9 @@ export function initRender(foundedPics, name, currentPage) {
         // Attach events on cards buttons
         attachEventsToCardsIcons(newCards);
 
-        customScrollbar();
         // Execute custom Scrollbar
         if ("ontouchstart" in window == false) {
-                
+                customScrollbar();
                 Notiflix.Notify.success(`DESKTOP`);
         }
 }
