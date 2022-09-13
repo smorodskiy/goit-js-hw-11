@@ -1,5 +1,5 @@
 // Perform custom scrollbar
-export const customScrollbar = function () {
+export const customScrollbar = (function () {
         var nu = navigator.userAgent,
                 aus = ["Mozilla", "IE"],
                 // Remove event listner polyfill
@@ -20,9 +20,9 @@ export const customScrollbar = function () {
                                   }
                                 : handler;
                         if (el.addEventListener) {
-                                listen = el.addEventListener(type, handler, false);
+                                el.addEventListener(type, handler, false);
                         } else if (el.attachEvent) {
-                                listen = el.addEventListener("on" + type, handler, false);
+                                el.addEventListener("on" + type, handler, false);
                         } else {
                                 el["on" + type] = handler;
                         }
@@ -148,7 +148,7 @@ export const customScrollbar = function () {
                                                 ).toFixed(2) +
                                         "%";
                         };
-                        body = document.querySelector(".custom-scrollbar");
+                body = document.querySelector(".custom-scrollbar");
 
                 if (!document.querySelector("figure")) {
                         scrollbar = document.createElement("figure");
@@ -170,7 +170,7 @@ export const customScrollbar = function () {
                 } else {
                         scrollbar = document.querySelector("figure");
                 }
-                
+
                 setScrollSize();
 
                 // Listen for scroll
@@ -186,4 +186,4 @@ export const customScrollbar = function () {
                 // Listerb for drug on wrapper
                 eventListner(body, "mousedown", handlerWrapDown);
         };
-}();
+})();
