@@ -51,8 +51,7 @@ window.customScrollbar = (function () {
                 };
 
         return function (a) {
-                var d = document,
-                        body,
+                var body,
                         scrollbar, // Runner
                         height, // Runner height
                         scrollTop, // Start scroll top,
@@ -149,10 +148,10 @@ window.customScrollbar = (function () {
                                                 ).toFixed(2) +
                                         "%";
                         },
-                        body = d.querySelector(".custom-scrollbar");
+                        body = document.querySelector(".custom-scrollbar");
 
-                if (!d.querySelector("figure")) {
-                        scrollbar = d.createElement("figure");
+                if (!document.querySelector("figure")) {
+                        scrollbar = document.createElement("figure");
                         body.insertAdjacentElement("afterbegin", scrollbar);
 
                         // Style1
@@ -169,7 +168,7 @@ window.customScrollbar = (function () {
                         // Style2
                         scrollbar.className = "outliner";
                 } else {
-                        scrollbar = d.querySelector("figure");
+                        scrollbar = document.querySelector("figure");
                 }
 
                 setScrollSize();
