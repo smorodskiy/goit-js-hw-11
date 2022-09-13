@@ -332,9 +332,15 @@ export function initRender(foundedPics, name, currentPage) {
         // Refresh simple box for new DOM
         lightbox.refresh();
 
-        // Update href for Download button
+        // Func for Update href for Download button
         lightboxUpdateDownloadButton();
 
         // Attach events on cards buttons
         attachEventsToCardsIcons(newCards);
+
+        // Execute custom Scrollbar
+        if ("ontouchstart" in window == false) {
+                customScrollbar();
+                Notiflix.Notify.success(`DESKTOP`);                
+        }
 }
