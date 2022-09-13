@@ -58,7 +58,7 @@ export const customScrollbar = (function () {
                         // Scroll handler
                         handlerScroll = function (e) {
                                 scrollbar.style.top =
-                                        (100 - parseInt(scrollbar.style.height)) *
+                                        (100 - parseFloat(scrollbar.style.height)) *
                                                 (document.documentElement.scrollTop /
                                                         (body.scrollHeight -
                                                                 document.documentElement
@@ -85,7 +85,7 @@ export const customScrollbar = (function () {
                                                 document.documentElement.clientHeight) *
                                                 (d / height),
                                 );
-
+                                
                                 window.scrollTo(0, calc);
                         },
                         handlerUp = function (e) {
@@ -139,14 +139,15 @@ export const customScrollbar = (function () {
                                 const scrollContentToBody =
                                         document.documentElement.clientHeight / body.scrollHeight;
 
-                                scrollbar.style.height =
+                                const calc =
                                         100 *
-                                                (
-                                                        (document.documentElement.clientHeight *
-                                                                +scrollContentToBody) /
-                                                        body.scrollHeight
-                                                ).toFixed(2) +
-                                        "%";
+                                        (
+                                                (document.documentElement.clientHeight *
+                                                        +scrollContentToBody) /
+                                                body.scrollHeight
+                                        ).toFixed(5);
+
+                                scrollbar.style.height = calc < 0.003 ? calc = 0.003 : calc + "%";
                         };
                 body = document.querySelector(".custom-scrollbar");
 
@@ -177,7 +178,7 @@ export const customScrollbar = (function () {
                 document.addEventListener("scroll", handlerScroll);
                 // eventListner(body, "scroll", handlerScroll);
 
-                // window.addEventListener("resize", setScrollSize);
+                window.addEventListener("resize", setScrollSize);
 
                 // Listen for drug
                 eventListner(scrollbar, "mousedown", handlerDown);

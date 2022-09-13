@@ -291,6 +291,9 @@ export function initRender(foundedPics, name, currentPage) {
                 );
         }
 
+        const isCustomScroll = document.querySelector('.custom-scrollbar');
+        let lastScrollTop;
+
         // If it's first page
         if (currentPage == 1) {
                 // Show succes message
@@ -317,11 +320,20 @@ export function initRender(foundedPics, name, currentPage) {
         }
 
         if (currentPage > 1) {
+
+                // Save last position for custom scroll                
+                if (isCustomScroll)
+                lastScrollTop = document.documentElement.scrollTop;                
+
                 // Hide waiting label and get label height
                 const loadingHeight = showLoading(false);
 
                 // Rendering part of gallery
                 var newCards = renderPicsToGrid(foundedPics);
+
+                // Restore last position for custom scroll
+                if (isCustomScroll)
+                document.documentElement.scrollTop = lastScrollTop;
 
                 // Do smooth scroll
                 doSmoothScroll(loadingHeight);
@@ -339,10 +351,9 @@ export function initRender(foundedPics, name, currentPage) {
         // Attach events on cards buttons
         attachEventsToCardsIcons(newCards);
 
-        // Execute custom Scrollbar on mobile devices
+        // Execute custom Scrollbar only on desktop devices
         if ("ontouchstart" in window == false) {
                 document.body.classList.add('custom-scrollbar');
-                customScrollbar();
-                Notiflix.Notify.success(`DESKTOP`);
+                customScrollbar();                
         }
 }
