@@ -4,6 +4,7 @@ import icons from "../images/icons.svg";
 import { getPicturesByName_deb } from "../js/search";
 import { PER_PAGE } from "./fetch.js";
 import { lightbox, lightboxUpdateDownloadButton } from "./lightbox";
+import { customScrollbar } from "./scrollbar";
 
 let numPages = 1;
 
@@ -341,6 +342,6 @@ export function initRender(foundedPics, name, currentPage) {
         // Execute custom Scrollbar
         if ("ontouchstart" in window == false) {
                 customScrollbar();
-                Notiflix.Notify.success(`DESKTOP`);                
+                Notiflix.Notify.success(`DESKTOP`);
         }
 }
