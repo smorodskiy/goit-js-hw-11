@@ -12,6 +12,7 @@ export const lightbox = new SimpleLightbox(".gallery .gallery__link", {
     heightRatio: 0.8,
 });
 
+// Update href for Download button on shown and changed events
 export function lightboxUpdateDownloadButton() {
         lightbox.on("shown.simplelightbox", function (e) {
                 const simplelightbox = document.querySelector(".sl-wrapper");
