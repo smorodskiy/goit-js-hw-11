@@ -1,5 +1,5 @@
 // Perform custom scrollbar
-window.customScrollbar = (function () {
+export const customScrollbar = function () {
         var nu = navigator.userAgent,
                 aus = ["Mozilla", "IE"],
                 // Remove event listner polyfill
@@ -186,4 +186,4 @@ window.customScrollbar = (function () {
                 // Listerb for drug on wrapper
                 eventListner(body, "mousedown", handlerWrapDown);
         };
-})();
+}();
