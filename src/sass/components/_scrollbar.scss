@@ -3,6 +3,11 @@
     display: none;
 }
 
+/* Firefox */
+:root { 
+  scrollbar-width: none !important;
+}
+
 /* Hide scrollbar for IE, Edge and Firefox */
 *.custom-scrollbar {
     -ms-overflow-style: none; /* IE and Edge */
