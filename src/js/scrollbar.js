@@ -85,7 +85,7 @@ export const customScrollbar = (function () {
                                                 document.documentElement.clientHeight) *
                                                 (d / height),
                                 );
-                                
+
                                 window.scrollTo(0, calc);
                         },
                         handlerUp = function (e) {
@@ -96,7 +96,7 @@ export const customScrollbar = (function () {
 
                                 // Enable transition
                                 scrollbar.classList.remove("notransition"); // Re-enable transitions
-
+                                // setDefaultStyle();
                                 // remove listen for window move
                                 removeEventListner(window, "mousemove", handlerMove);
                                 e.stopPropagation();
@@ -114,6 +114,9 @@ export const customScrollbar = (function () {
 
                                 // Disable transition
                                 scrollbar.classList.add("notransition"); // Disable transitions
+                                // setHoverStyle();
+
+                                // console.log(getComputedStyle(scrollbar));
 
                                 // Listen for window move
                                 eventListner(window, "mousemove", handlerMove);
@@ -147,9 +150,28 @@ export const customScrollbar = (function () {
                                                 body.scrollHeight
                                         ).toFixed(5);
 
-                                scrollbar.style.height = calc < 0.003 ? calc = 0.003 : calc + "%";
-                        };
-                body = document.querySelector(".custom-scrollbar");
+                                scrollbar.style.height = calc < 0.003 ? (calc = 0.003) : calc + "%";
+                        },
+                        // setDefaultStyle = function () {
+                        //         scrollbar.style.cssText = `
+                        //                 border: 1px solid;
+                        //                 box-shadow: inset 0 0 20px #ff7608, 0 0 15px #ff7608;
+                        //                 outline-color: rgba(255, 255, 255, 0);
+                        //                 outline-offset: 15px;
+                        //         `;
+                        // },
+                        // setHoverStyle = function () {
+                        //         scrollbar.style.cssText = `
+                        //                 border: 0 solid;
+                        //                 box-shadow: inset 0 0 20px #de415f;
+                        //                 outline: 1px solid;
+                        //                 outline-color: #de415f;
+                        //                 outline-offset: 0px;
+                        //                 height: 270px;
+                        //                 transition: all 1250ms cubic-bezier(0.19, 1, 0.22, 1);
+                        // `;
+                        // },
+                        body = document.querySelector(".custom-scrollbar");
 
                 if (!document.querySelector("figure")) {
                         scrollbar = document.createElement("figure");
