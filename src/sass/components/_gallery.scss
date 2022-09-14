@@ -102,15 +102,14 @@
 
 // Skelet of cards
 .gallery {
-
     &__card.new::after {
         content: "";
         width: 100%;
         height: calc(100% - 70px);
         position: absolute;
-        background-color: rgb(203, 213, 224);        
+        background-color: rgba(203, 213, 224, 1);
         opacity: 1;
-        transition: opacity 1300ms ease;
+        // transition: opacity 1300ms ease;
         // animation: pulse 1.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     }
 
@@ -119,9 +118,9 @@
         width: 100%;
         height: calc(100% - 70px);
         position: absolute;
-        background-color: rgb(203, 213, 224);        
+        background-color: rgba(203, 213, 224, 1);
         opacity: 0;
-        transition: opacity 1300ms ease;        
+        transition: opacity 1000ms ease-out;
     }
 
     &__icon-wrapper::after {
@@ -130,7 +129,7 @@
         height: 15px;
         background-color: rgb(163, 191, 250);
         position: absolute;
-        transition: opacity 300ms ease;
+        // transition: opacity 100ms ease;
         opacity: 0;
     }
 
@@ -141,14 +140,14 @@
         background-color: #a0aec0;
         position: absolute;
         top: 3px;
-        transition: opacity 300ms ease;
+        // transition: opacity 1300ms ease;
         opacity: 0;
     }
 
     .new &__icon-wrapper::after,
     .new &__item:after {
         opacity: 1;
-        // animation: pulse 1.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        animation: pulse 1.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     }
 
     &__item > b,
@@ -169,18 +168,20 @@
         0%,
         100% {
             opacity: 1;
+            // background-color: rgba(203, 213, 224, 1);
         }
         50% {
             opacity: 0.3;
+            // background-color: rgba(203, 213, 224, 0.3);
         }
     }
 }
 
 // Fade in picture effect
-.loadable {
+.loaded {
     opacity: 1;
     height: calc(100% - 70px);
     width: 100%;
-    transition: height 1.5s 0.5s, opacity 1.5s 0.8s;
+    transition: height 1.5s 0.5s, opacity 1s 0.8s;
     z-index: 10;
 }
