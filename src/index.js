@@ -5,7 +5,6 @@ import "./js/gallery";
 // Additional
 import "./js/lightbox";
 import "./js/scrollbar";
-import "./js/download-btn";
 
 // Services
 import "./js/services/download";
