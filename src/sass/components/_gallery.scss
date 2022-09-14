@@ -43,6 +43,7 @@
     }
 
     &__item {
+        position: relative;
         display: flex;
         flex-direction: column;
         font-size: 13px;
@@ -99,24 +100,87 @@
     }
 }
 
+// Skelet of cards
+.gallery {
+
+    &__card.new::after {
+        content: "";
+        width: 100%;
+        height: calc(100% - 70px);
+        position: absolute;
+        background-color: rgb(203, 213, 224);        
+        opacity: 1;
+        transition: opacity 1300ms ease;
+        // animation: pulse 1.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    &__card::after {
+        content: "";
+        width: 100%;
+        height: calc(100% - 70px);
+        position: absolute;
+        background-color: rgb(203, 213, 224);        
+        opacity: 0;
+        transition: opacity 1300ms ease;        
+    }
+
+    &__icon-wrapper::after {
+        content: "";
+        width: 70%;
+        height: 15px;
+        background-color: rgb(163, 191, 250);
+        position: absolute;
+        transition: opacity 300ms ease;
+        opacity: 0;
+    }
+
+    &__item:after {
+        content: "";
+        width: 85%;
+        height: 20px;
+        background-color: #a0aec0;
+        position: absolute;
+        top: 3px;
+        transition: opacity 300ms ease;
+        opacity: 0;
+    }
+
+    .new &__icon-wrapper::after,
+    .new &__item:after {
+        opacity: 1;
+        // animation: pulse 1.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    &__item > b,
+    &__icon-wrapper > &__icon,
+    &__icon-wrapper > p {
+        opacity: 1;
+        transition: opacity 300ms ease;
+    }
+
+    .new &__item > b,
+    .new &__icon-wrapper > &__icon,
+    .new &__icon-wrapper > p {
+        opacity: 0;
+        transition: opacity 300ms ease;
+    }
+
+    @keyframes pulse {
+        0%,
+        100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.3;
+        }
+    }
+}
+
 // Fade in picture effect
 .loadable {
     opacity: 1;
     height: calc(100% - 70px);
     width: 100%;
     transition: height 1.5s 0.5s, opacity 1.5s 0.8s;
-}
-
-.pulse {
-    animation: pulse 1.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes pulse {
-    0%,
-    100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.3;
-    }
+    z-index: 10;
 }
