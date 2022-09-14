@@ -153,16 +153,33 @@ function paginationShowLoading(show) {
                 container.insertAdjacentHTML(
                         "beforeend",
                         `
-                        
                         <div class="loading">
-                                <div class="loading__yellow"></div>
-                                <div class="loading__red"></div>
-                                <div class="loading__blue"></div>
-                                <div class="loading__violet"></div>
-                        </div>
-                        
+                        <ul>
+                          <li></li>
+                          <li></li>
+                          <li></li>
+                          <li></li>
+                          <li></li>
+                          <li></li>
+                          <li></li>
+                        </ul>
+                      </div>
                         `,
                 );
+
+                // container.insertAdjacentHTML(
+                //         "beforeend",
+                //         `
+
+                //         <div class="loading">
+                //                 <div class="loading__yellow"></div>
+                //                 <div class="loading__red"></div>
+                //                 <div class="loading__blue"></div>
+                //                 <div class="loading__violet"></div>
+                //         </div>
+
+                //         `,
+                // );
                 window.scrollTo(0, document.body.scrollHeight);
         } else {
                 const loading = document.querySelector(".loading");
@@ -251,25 +268,27 @@ function renderPicsToGrid(picsOfJSON) {
         // Get all new cards
         const newCards = gallery.querySelectorAll(".gallery__card.new");
 
-        // Remove skelete of cards
-        removeSkelets(newCards);
+        // Add events on pictures and checking downloading complete
+        onLoadPics(newCards);
 
         return newCards;
 }
 
-// !!!!!!!!!!!!!!!!!!!!
-// Remove skeletes from cards
-function removeSkelets(newCards) {
-        // Remove skelet effect from each link and add loaded mark on img
+// Add events on pictures and checking downloading complete
+function onLoadPics(newCards) {
         newCards.forEach((card) => {
                 const link = card.firstElementChild;
                 const img = link.firstElementChild;
+
+                // If pic is loaded - remove skelet effect and add loaded mark on img
                 img.onload = () => {
+                        // Added random showing delay
                         setTimeout(() => {
+                                // card.style.setProperty('--anim','none');
+                                // card.classList.add("fadeout");
                                 card.classList.remove("new");
-                                // link.classList.remove("pulse");
-                                link.classList.add("loadable");
-                        }, getRndInteger(100, 1000));
+                                link.classList.add("loaded");
+                        }, getRndInteger(400, 1000));
                 };
         });
 }
@@ -291,7 +310,7 @@ export function initRender(foundedPics, name, currentPage) {
                 );
         }
 
-        const isCustomScroll = document.querySelector('.custom-scrollbar');
+        const isCustomScroll = document.querySelector(".custom-scrollbar");
         let lastScrollTop;
 
         // If it's first page
@@ -320,10 +339,8 @@ export function initRender(foundedPics, name, currentPage) {
         }
 
         if (currentPage > 1) {
-
-                // Save last position for custom scroll                
-                if (isCustomScroll)
-                lastScrollTop = document.documentElement.scrollTop;                
+                // Save last position for custom scroll
+                if (isCustomScroll) lastScrollTop = document.documentElement.scrollTop;
 
                 // Hide waiting label and get label height
                 const loadingHeight = paginationShowLoading(false);
@@ -332,8 +349,7 @@ export function initRender(foundedPics, name, currentPage) {
                 var newCards = renderPicsToGrid(foundedPics);
 
                 // Restore last position for custom scroll
-                if (isCustomScroll)
-                document.documentElement.scrollTop = lastScrollTop;
+                if (isCustomScroll) document.documentElement.scrollTop = lastScrollTop;
 
                 // Do smooth scroll
                 doSmoothScroll(loadingHeight);
@@ -353,7 +369,7 @@ export function initRender(foundedPics, name, currentPage) {
 
         // Execute custom Scrollbar only on desktop devices
         if ("ontouchstart" in window == false) {
-                document.body.classList.add('custom-scrollbar');
-                customScrollbar();                
+                document.body.classList.add("custom-scrollbar");
+                customScrollbar();
         }
 }
