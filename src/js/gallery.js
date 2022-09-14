@@ -2,7 +2,7 @@ import { debounce } from "lodash";
 import Notiflix from "notiflix";
 import icons from "../images/icons.svg";
 import { getPicturesByName_deb } from "../js/search";
-import { PER_PAGE } from "./fetch.js";
+import { PER_PAGE } from "./services/fetch.js";
 import { lightbox, lightboxUpdateDownloadButton } from "./lightbox";
 import { customScrollbar } from "./scrollbar";
 
@@ -38,7 +38,7 @@ function createGalleryCard(
                 <a class="gallery__link" href="${largeImageURL}">
                         <img class="gallery__image" src="${webformatURL}" alt="${tags}" loading="lazy" />
                 </a>
-        
+               
                 <ul class="gallery__info">
                         <li class="gallery__item">
                                 <b>Likes</b>
@@ -146,7 +146,7 @@ function getAbsoluteHeight(el) {
 }
 
 // Loading... label
-function showLoading(show) {
+function paginationShowLoading(show) {
         const container = document.querySelector(".container");
 
         if (show) {
@@ -194,7 +194,7 @@ function scrollPagination(name, currentPage) {
                 }
 
                 // Show waiting label
-                showLoading(true);
+                paginationShowLoading(true);
 
                 setTimeout(() => {
                         // Send request for next pages pictures
@@ -267,7 +267,7 @@ function removeSkelets(newCards) {
                 img.onload = () => {
                         setTimeout(() => {
                                 card.classList.remove("new");
-                                link.classList.remove("pulse");
+                                // link.classList.remove("pulse");
                                 link.classList.add("loadable");
                         }, getRndInteger(100, 1000));
                 };
@@ -326,7 +326,7 @@ export function initRender(foundedPics, name, currentPage) {
                 lastScrollTop = document.documentElement.scrollTop;                
 
                 // Hide waiting label and get label height
-                const loadingHeight = showLoading(false);
+                const loadingHeight = paginationShowLoading(false);
 
                 // Rendering part of gallery
                 var newCards = renderPicsToGrid(foundedPics);
