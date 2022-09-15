@@ -1,212 +1,221 @@
-// Perform custom scrollbar
-export const customScrollbar = (function () {
-        var nu = navigator.userAgent,
-                aus = ["Mozilla", "IE"],
-                // Remove event listner polyfill
-                removeEventListner = function (el, type, handler) {
-                        if (el.addEventListener) {
-                                el.removeEventListener(type, handler, false);
-                        } else if (elem.attachEvent) {
-                                el.detachEvent("on" + type, handler);
-                        } else {
-                                el["on" + type] = null;
-                        }
-                },
-                // Event listner polyfill
-                eventListner = function (el, type, handler, once) {
-                        var realhandler = once
-                                ? function () {
-                                          removeEventListner(el, type, realhandler);
-                                  }
-                                : handler;
-                        if (el.addEventListener) {
-                                el.addEventListener(type, handler, false);
-                        } else if (el.attachEvent) {
-                                el.addEventListener("on" + type, handler, false);
-                        } else {
-                                el["on" + type] = handler;
-                        }
-                        return el;
-                },
-                retfalse = function () {
-                        return !!0;
-                },
-                disableSelection = function (el) {
-                        if (nu.indexOf(aus[0]) != -1)
-                                // FF
-                                el.style["MozUserSelect"] = "none";
-                        else if (nu.indexOf(aus[1]) != -1)
-                                // IE
-                                eventListner(el, "selectstart.disableTextSelect", retfalse);
-                        else eventListner(el, "mousedown.disableTextSelect", retfalse);
-                },
-                enableSelection = function (el) {
-                        if (nu.indexOf(aus[0]) != -1)
-                                // FF
-                                el.style["MozUserSelect"] = "";
-                        else if (nu.indexOf(aus[1]) != -1)
-                                // IE
-                                removeEventListner(el, "selectstart.disableTextSelect", retfalse);
-                        else removeEventListner(el, "mousedown.disableTextSelect", retfalse);
-                };
+// Remove event listener polyfill
+function removeEventListner(el, type, handler) {
+        if (el.addEventListener) {
+                const re = el.removeEventListener(type, handler, false);
+        } else if (elem.attachEvent) {
+                el.detachEvent("on" + type, handler);
+        } else {
+                el["on" + type] = null;
+        }
+}
 
-        return function (a) {
-                var body,
-                        scrollbar, // Runner
-                        height, // Runner height
-                        scrollTop, // Start scroll top,
-                        // Scroll handler
-                        handlerScroll = function (e) {
-                                scrollbar.style.top =
-                                        (100 - parseFloat(scrollbar.style.height)) *
-                                                (document.documentElement.scrollTop /
-                                                        (body.scrollHeight -
-                                                                document.documentElement
-                                                                        .clientHeight)) +
-                                        "%";
-                        },
-                        drag = !!0,
-                        screenY = 0,
-                        handlerMove = function (e) {
-                                var d =
-                                        height *
-                                                (scrollTop /
-                                                        (body.scrollHeight -
-                                                                document.documentElement
-                                                                        .clientHeight)) +
-                                        (e.screenY - screenY);
+// Event listener polyfill
+function eventListner(el, type, handler, once) {
+        var realhandler = once
+                ? function () {
+                          removeEventListner(el, type, realhandler);
+                  }
+                : handler;
+        if (el.addEventListener) {
+                el.addEventListener(type, handler, false);
+        } else if (el.attachEvent) {
+                el.addEventListener("on" + type, handler, false);
+        } else {
+                el["on" + type] = handler;
+        }
+        return el;
+}
 
-                                if (d > height) d = height;
-                                else if (d < 0) d = 0;
+function retfalse() {
+        return !!0;
+}
 
-                                // set Scroll top
-                                const calc = Math.round(
+// For selection text
+var nu = navigator.userAgent;
+var aus = ["Mozilla", "IE"];
+
+// Disable selection text
+function disableSelection(el) {
+        if (nu.indexOf(aus[0]) != -1)
+                // FF
+                el.style["MozUserSelect"] = "none";
+        else if (nu.indexOf(aus[1]) != -1)
+                // IE
+                eventListner(el, "selectstart.disableTextSelect", retfalse);
+        else eventListner(el, "mousedown.disableTextSelect", retfalse);
+}
+
+// Enable selection text
+function enableSelection(el) {
+        if (nu.indexOf(aus[0]) != -1)
+                // FF
+                el.style["MozUserSelect"] = "";
+        else if (nu.indexOf(aus[1]) != -1)
+                // IE
+                removeEventListner(el, "selectstart.disableTextSelect", retfalse);
+        else removeEventListner(el, "mousedown.disableTextSelect", retfalse);
+}
+
+// Custom scrollbar
+export function customScrollbar() {
+        var body,
+                scrollbar, // Runner
+                clientHeightWithoutScroll, // Runner height
+                scrollTop, // Start scroll top,
+                screenY = 0;
+
+        body = document.querySelector(".custom-scrollbar");
+
+        // Check if scrollbar already present in DOM
+        // Scroll reference
+        if (!document.querySelector("figure")) {
+                scrollbar = document.createElement("figure");
+                body.insertAdjacentElement("afterbegin", scrollbar);
+
+                // Add style
+                scrollbar.className = "outliner";
+        } else {
+                scrollbar = document.querySelector("figure");
+        }
+
+        // First init size
+        setScrollSize();
+
+        // Listen for scroll
+        eventListner(document, "scroll", handlerScroll);
+
+        // Resize scrollbar on resizing window
+        eventListner(window, "resize", setScrollSize);
+
+        // Listen for drug
+        eventListner(scrollbar, "mousedown", handlerDown);
+        eventListner(scrollbar, "mouseup", handlerUp);
+
+        // Lister for drug on wrapper(up/down of the scrollbar)
+        eventListner(body, "mousedown", handlerWrapDown);
+
+        // On mouse up click
+        function handlerUp(e) {
+                // drag = !!0;
+
+                // Enable selection
+                enableSelection(body);
+
+                // Enable transition
+                scrollbar.classList.remove("notransition"); // Re-enable transitions
+
+                // Set style
+                // setDefaultStyle();
+
+                // remove listen for window move
+                removeEventListner(window, "mousemove", handlerMove);
+
+                // Stop events(bubbling)
+                e.stopPropagation();
+        }
+
+        // On mouse down click
+        function handlerDown(e) {
+                // drag = !0;
+
+                // Vertical position
+                screenY = e.screenY;
+
+                // Height of visible document minus height of scrollbar
+                clientHeightWithoutScroll =
+                        document.documentElement.clientHeight -
+                        parseInt(window.getComputedStyle(scrollbar).height);
+
+                // Current position scrollbar
+                scrollTop = document.documentElement.scrollTop;
+
+                // Disable selection
+                disableSelection(body);
+
+                // Disable transition, slowly moving
+                scrollbar.classList.add("notransition");
+
+                // Listen for window move
+                eventListner(window, "mousemove", handlerMove);
+                eventListner(window, "mouseup", handlerUp, true);
+
+                e.preventDefault();
+                return false;
+        }
+
+        // On mouse move
+        function handlerMove(e) {
+                // Calc position of scroll
+                // Height of visible document without scrollbar *
+                // (Last Y position of scrollbar / (height all of document - visible part document)) +
+                //
+                var curScrollPosition =
+                        clientHeightWithoutScroll *
+                                (scrollTop /
+                                        (body.scrollHeight -
+                                                document.documentElement.clientHeight)) +
+                        (e.screenY - screenY);
+
+                // Checking scroll position don't moving out of clientheight
+                if (curScrollPosition > clientHeightWithoutScroll)
+                        curScrollPosition = clientHeightWithoutScroll;
+                else if (curScrollPosition < 0) curScrollPosition = 0;
+
+                // Calc new scroll position
+                const calcNewScrollPosition = Math.round(
+                        (body.scrollHeight - document.documentElement.clientHeight) *
+                                (curScrollPosition / clientHeightWithoutScroll),
+                );
+
+                // Set scrollbar new position
+                window.scrollTo(0, calcNewScrollPosition);
+        }
+
+        // Mouse click on wrapper scrollbar
+        function handlerWrapDown(e) {
+                // Click at area scroll(15px from right side)
+                if (e.offsetX > body.offsetWidth - 15) {
+                        const calcNewScrollPosition = (document.documentElement.scrollTop =
+                                Math.round(
                                         (body.scrollHeight -
                                                 document.documentElement.clientHeight) *
-                                                (d / height),
-                                );
+                                                (e.offsetY / body.offsetHeight),
+                                ));
 
-                                window.scrollTo(0, calc);
-                        },
-                        handlerUp = function (e) {
-                                drag = !!0;
+                        // Set scrollbar new position
+                        window.scrollTo(0, calcNewScrollPosition);
 
-                                // Enable selection
-                                enableSelection(body);
-
-                                // Enable transition
-                                scrollbar.classList.remove("notransition"); // Re-enable transitions
-                                // setDefaultStyle();
-                                // remove listen for window move
-                                removeEventListner(window, "mousemove", handlerMove);
-                                e.stopPropagation();
-                        },
-                        handlerDown = function (e) {
-                                drag = !0;
-                                screenY = e.screenY;
-                                height =
-                                        document.documentElement.clientHeight -
-                                        parseInt(window.getComputedStyle(scrollbar).height);
-                                scrollTop = document.documentElement.scrollTop;
-
-                                // Disable selection
-                                disableSelection(body);
-
-                                // Disable transition
-                                scrollbar.classList.add("notransition"); // Disable transitions
-                                // setHoverStyle();
-
-                                // console.log(getComputedStyle(scrollbar));
-
-                                // Listen for window move
-                                eventListner(window, "mousemove", handlerMove);
-                                eventListner(window, "mouseup", handlerUp, true);
-                                e.preventDefault();
-                                return false;
-                        },
-                        handlerWrapDown = function (e) {
-                                if (e.offsetX > body.offsetWidth - 20) {
-                                        const calc = (document.documentElement.scrollTop =
-                                                Math.round(
-                                                        (body.scrollHeight -
-                                                                document.documentElement
-                                                                        .clientHeight) *
-                                                                (e.offsetY / body.offsetHeight),
-                                                ));
-                                        window.scrollTo(0, calc);
-                                        handlerDown(e);
-                                }
-                        },
-                        setScrollSize = function () {
-                                // Set size of runner
-                                const scrollContentToBody =
-                                        document.documentElement.clientHeight / body.scrollHeight;
-
-                                const calc =
-                                        100 *
-                                        (
-                                                (document.documentElement.clientHeight *
-                                                        +scrollContentToBody) /
-                                                body.scrollHeight
-                                        ).toFixed(5);
-
-                                scrollbar.style.height = calc < 0.003 ? (calc = 0.003) : calc + "%";
-                        },
-                        // setDefaultStyle = function () {
-                        //         scrollbar.style.cssText = `
-                        //                 border: 1px solid;
-                        //                 box-shadow: inset 0 0 20px #ff7608, 0 0 15px #ff7608;
-                        //                 outline-color: rgba(255, 255, 255, 0);
-                        //                 outline-offset: 15px;
-                        //         `;
-                        // },
-                        // setHoverStyle = function () {
-                        //         scrollbar.style.cssText = `
-                        //                 border: 0 solid;
-                        //                 box-shadow: inset 0 0 20px #de415f;
-                        //                 outline: 1px solid;
-                        //                 outline-color: #de415f;
-                        //                 outline-offset: 0px;
-                        //                 height: 270px;
-                        //                 transition: all 1250ms cubic-bezier(0.19, 1, 0.22, 1);
-                        // `;
-                        // },
-                        body = document.querySelector(".custom-scrollbar");
-
-                if (!document.querySelector("figure")) {
-                        scrollbar = document.createElement("figure");
-                        body.insertAdjacentElement("afterbegin", scrollbar);
-
-                        // Style1
-                        // scrollbar.className = "animated-button1";
-                        // span = d.createElement("span");
-                        // scrollbar.appendChild(span);
-                        // span = d.createElement("span");
-                        // scrollbar.appendChild(span);
-                        // span = d.createElement("span");
-                        // scrollbar.appendChild(span);
-                        // span = d.createElement("span");
-                        // scrollbar.appendChild(span);
-
-                        // Style2
-                        scrollbar.className = "outliner";
-                } else {
-                        scrollbar = document.querySelector("figure");
+                        // Call mouse down click for document moving
+                        handlerDown(e);
                 }
+        }
 
-                setScrollSize();
+        // On mouse scroll
+        function handlerScroll() {
+                // Set postition scrollbar on mouse scrolling
+                scrollbar.style.top =
+                        (100 - parseFloat(scrollbar.style.height)) *
+                                (document.documentElement.scrollTop /
+                                        (body.scrollHeight -
+                                                document.documentElement.clientHeight)) +
+                        "%";
+        }
 
-                // Listen for scroll
-                document.addEventListener("scroll", handlerScroll);
-                // eventListner(body, "scroll", handlerScroll);
+        // Set size of scrollbar
+        function setScrollSize() {
+                // Calc relation all of doc to visible part
+                const relation = document.documentElement.clientHeight / body.scrollHeight;
 
-                window.addEventListener("resize", setScrollSize);
+                // Set size scrollbar like relation (all of doc to visible part)
+                const calcScrollSize =
+                        100 *
+                        (
+                                (document.documentElement.clientHeight * +relation) /
+                                body.scrollHeight
+                        ).toFixed(5);
 
-                // Listen for drug
-                eventListner(scrollbar, "mousedown", handlerDown);
-                eventListner(scrollbar, "mouseup", handlerUp);
-
-                // Listerb for drug on wrapper
-                eventListner(body, "mousedown", handlerWrapDown);
-        };
-})();
+                // Set scroll size and if size very small set static
+                scrollbar.style.height =
+                        calcScrollSize < 0.003 ? (calcScrollSize = 0.003) : calcScrollSize + "%";
+        }
+}

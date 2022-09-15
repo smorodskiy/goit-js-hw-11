@@ -1,52 +1,65 @@
-/* From uiverse.io by @fanishah */
-.gegga {
-    width: 0;
+$base: 1.6rem;
+
+.arrowup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    transform: skew(0deg, -13deg);
 }
 
-.snurra {
-    filter: url(#gegga);
-}
-
-.stopp1 {
-    stop-color: #f700a8;
-}
-
-.stopp2 {
-    stop-color: #ff8000;
-}
-
-.halvan {
-    animation: Snurra1 10s infinite linear;
-    stroke-dasharray: 180 800;
-    fill: none;
-    stroke: url(#gradient);
-    stroke-width: 23;
-    stroke-linecap: round;
-}
-
-.strecken {
-    animation: Snurra1 3s infinite linear;
-    stroke-dasharray: 26 54;
-    fill: none;
-    stroke: url(#gradient);
-    stroke-width: 23;
-    stroke-linecap: round;
-}
-
-.skugga {
-    filter: blur(5px);
-    left: 0;
-    opacity: 0.3;
+.chevron {
     position: absolute;
-    transform: translate(3px, 3px);
+    width: $base * 3.5;
+    height: $base * 0.8;
+    opacity: 0;
+    transform: scale(0.3);
+    animation: move-chevron 3s ease-out infinite;
 }
 
-@keyframes Snurra1 {
-    0% {
-        stroke-dashoffset: 0;
-    }
+.chevron:first-child {
+    animation: move-chevron 3s ease-out 1s infinite;
+}
 
+.chevron:nth-child(2) {
+    animation: move-chevron 3s ease-out 2s infinite;
+}
+
+.chevron:before,
+.chevron:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 50%;
+    background: #965de9;
+}
+
+.chevron:before {
+    left: 0;
+    transform: skewY(330deg);
+}
+
+.chevron:after {
+    right: 0;
+    width: 50%;
+    transform: skewY(30deg);
+}
+
+@keyframes move-chevron {
+    25% {
+        opacity: 0;
+        transform: translateY($base * 8) scale(0.5);
+    }
+    33.3% {
+        opacity: 1;
+        transform: translateY($base * 5.2);
+    }
+    66.6% {
+        opacity: 1;
+        transform: translateY($base * 3.8);
+    }
     100% {
-        stroke-dashoffset: -403px;
+        opacity: 0;
     }
 }

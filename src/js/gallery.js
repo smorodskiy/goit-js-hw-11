@@ -203,7 +203,7 @@ function scrollPagination(name, currentPage) {
                 // Increment num of page
                 currentPage++;
 
-                // Deattach pagination if it's last page of pictures
+                // Return if it's last page of pictures
                 if (currentPage > numPages) {
                         // Show end message
                         Notiflix.Notify.success(`You've reached the end of search results.`);
@@ -213,6 +213,10 @@ function scrollPagination(name, currentPage) {
                 // Show waiting label
                 paginationShowLoading(true);
 
+                // Close active picture
+                lightbox.close();
+
+                // Little wait for loading label
                 setTimeout(() => {
                         // Send request for next pages pictures
                         getPicturesByName_deb(name, currentPage);
@@ -323,7 +327,7 @@ export function initRender(foundedPics, name, currentPage) {
 
                 // Remove blank pic
                 const gallery = document.querySelector(".intro");
-                gallery.style.setProperty('display', 'none');
+                gallery.style.setProperty("display", "none");
                 // gallery.classList.remove("gallery--empty-page");
 
                 // Clear all gallery
@@ -342,6 +346,10 @@ export function initRender(foundedPics, name, currentPage) {
         if (currentPage > 1) {
                 // Save last position for custom scroll
                 if (isCustomScroll) lastScrollTop = document.documentElement.scrollTop;
+                // lightbox.refresh();
+                // Close active picture
+                // lightbox.close();
+                // const isClosed = new Promise()
 
                 // Hide waiting label and get label height
                 const loadingHeight = paginationShowLoading(false);
