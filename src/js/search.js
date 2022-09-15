@@ -47,6 +47,8 @@ document.addEventListener("DOMContentLoaded", function () {
         goBtnElem.addEventListener("click", () => {
                 getPicturesByName_deb(searchElem.value, 1);
         });
+
+        getPicturesByName_deb(searchElem.value, 1);
 });
 
 // Post http req and trying to get pictures

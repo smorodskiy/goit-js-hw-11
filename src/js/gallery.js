@@ -320,7 +320,7 @@ export function initRender(foundedPics, name, currentPage) {
         // If it's first page
         if (currentPage == 1) {
                 // Show succes message
-                Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+                name != "" && Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
 
                 // Calcs pages
                 numPages = Math.ceil(totalHits / PER_PAGE);
@@ -346,6 +346,7 @@ export function initRender(foundedPics, name, currentPage) {
         if (currentPage > 1) {
                 // Save last position for custom scroll
                 if (isCustomScroll) lastScrollTop = document.documentElement.scrollTop;
+
                 // lightbox.refresh();
                 // Close active picture
                 // lightbox.close();
