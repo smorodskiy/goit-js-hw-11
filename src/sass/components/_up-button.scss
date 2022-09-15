@@ -17,15 +17,15 @@
     // opacity: 0;
     // visibility: hidden;
     z-index: 1000;
+    cursor: pointer;
 
     & > svg {
         width: 40px;
         height: 40px;
     }
 
-    &:hover {
-        cursor: pointer;
-        background-color: #333;
+    &:hover {        
+        background-color: var(--hoverBgColor, #333);
     }
     &:active {
         background-color: #555;
