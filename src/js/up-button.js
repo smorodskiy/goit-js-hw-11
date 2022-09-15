@@ -18,7 +18,10 @@ window.addEventListener("scroll", () => {
                 behavior: "smooth",
         });
 
-        btn.blur(); 
+        document.body.click();
+
+        // btn.blur(); 
+
     }, false);
 });
 
