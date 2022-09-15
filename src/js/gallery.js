@@ -324,8 +324,8 @@ export function initRender(foundedPics, name, currentPage) {
                 numPages = Math.ceil(totalHits / PER_PAGE);
 
                 // Remove blank pic
-                const gallery = document.querySelector(".intro");
-                gallery.style.setProperty("display", "none");
+                // const gallery = document.querySelector(".intro");
+                // gallery.style.setProperty("display", "none");
                 // gallery.classList.remove("gallery--empty-page");
 
                 // Clear all gallery
