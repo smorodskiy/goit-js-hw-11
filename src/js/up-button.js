@@ -8,19 +8,26 @@ window.addEventListener("scroll", () => {
         }
 });
 
-btn.addEventListener('click', (e)=> {
-    e.preventDefault();
+"click mousedown touchdown".split(" ").forEach(function (e) {
+    btn.addEventListener(e, (btnEvent) => {
+        btnEvent.preventDefault();
 
-    window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: 'smooth'
-      });
+        window.scrollTo({
+                top: 0,
+                left: 0,
+                behavior: "smooth",
+        });
 
-    btn.blur();
-    // window.scrollBy({ 
-    //     top: 0,
-    //     behavior: 'smooth' 
-    //   });
+        btn.blur(); 
+    }, false);
+});
 
-})
+
+
+// btn.addEventListener("click", (e) => {
+
+//         // window.scrollBy({
+//         //     top: 0,
+//         //     behavior: 'smooth'
+//         //   });
+// });
