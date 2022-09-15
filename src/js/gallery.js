@@ -288,11 +288,9 @@ function onLoadPics(newCards) {
                 img.onload = () => {
                         // Added random showing delay
                         setTimeout(() => {
-                                // card.style.setProperty('--anim','none');
-                                // card.classList.add("fadeout");
                                 card.classList.remove("new");
                                 link.classList.add("loaded");
-                        }, getRndInteger(400, 1000));
+                        }, getRndInteger(500, 2000));
                 };
         });
 }
