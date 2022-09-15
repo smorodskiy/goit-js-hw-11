@@ -290,7 +290,7 @@ function onLoadPics(newCards) {
                         setTimeout(() => {
                                 card.classList.remove("new");
                                 img.classList.add("loaded");
-                        }, getRndInteger(500, 1000));
+                        }, getRndInteger(400, 1000));
                 };
         });
 }
