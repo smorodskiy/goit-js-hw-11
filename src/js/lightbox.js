@@ -14,9 +14,10 @@ export const lightbox = new SimpleLightbox(".gallery .gallery__link", {
 
 // Update href for Download button on shown and changed events
 export function lightboxUpdateDownloadButton() {
+        // this event fires after the lightbox was opened
         lightbox.on("shown.simplelightbox", function (e) {
                 const simplelightbox = document.querySelector(".sl-wrapper");
-                const btnDownload = document.querySelector(".sl-wrapper .download");
+                const btnDownload = simplelightbox.querySelector(".sl-wrapper .download");
                 const href = e.target.getAttribute("href");
 
                 if (!btnDownload) {
@@ -34,8 +35,10 @@ export function lightboxUpdateDownloadButton() {
                 }
 
                 btnDownload.onclick = () => download(href);
+               
         });
 
+        // this event fires after image was changed
         lightbox.on("changed.simplelightbox", function (e) {
                 const img = document.querySelector(".sl-wrapper img");
 
@@ -46,15 +49,15 @@ export function lightboxUpdateDownloadButton() {
                 btnDownload.onclick = () => download(href);
         });
 
+        // this event fires before the lightbox closes
         lightbox.on("close.simplelightbox", function (e) {
                 const btnDownload = document.querySelector(".sl-wrapper .download");
+                btnDownload.style.setProperty('opacity', '0');
+        });
 
-                btnDownload.animate(
-                        { opacity: "0" },
-                        {
-                                duration: 300,
-                                iterations: 1,
-                        },
-                );
+        // this event fires after the lightbox was closed
+        lightbox.on("closed.simplelightbox", function (e) {
+                const btnDownload = lightbox.domNodes.wrapper.querySelector(".download");
+                btnDownload.style.setProperty('opacity', '1');
         });
 }
