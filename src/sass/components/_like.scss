@@ -2,17 +2,18 @@
     &__likes-icon {
         position: absolute;
         overflow: visible;
-        width: 30px;
-        height: 30px;
-        left: -8px;
-        stroke-width: 2px;
-        stroke: #000;
-        fill: #fff;
+        width: 28px;
+        height: 28px;
+        left: -6px;
         cursor: pointer;
 
         #heart {
+            stroke-width: 3px;
+            stroke: #000;
+            fill: #fff;
             transform-origin: center;
             animation: animateHeartOut 0.3s linear forwards;
+            transition: stroke 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
         #main-circ {
             transform-origin: 29.5px 29.5px;
@@ -23,7 +24,9 @@
         #heart {
             transform: scale(0.2);
             fill: #e2264d;
+            // stroke-width: 3px;
             stroke-width: 0;
+            // stroke: #000;
             animation: animateHeart 0.3s linear forwards 0.25s;
         }
         #main-circ {

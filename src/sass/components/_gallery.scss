@@ -29,13 +29,12 @@
         box-shadow: 0 2px 20px rgb(0 0 0 / 20%);
     }
 
-    &__image {        
+    &__image {
         height: 100%;
         width: 100%;
         object-fit: cover;
         opacity: 0;
         border-radius: 10px 10px 0 0;
-        // overflow: hidden;
     }
 
     &__image:hover {
@@ -57,15 +56,32 @@
         // align-items: center;
         font-size: 13px;
         user-select: none;
+        width: 75px;
     }
 
+    // First column of cards bottom
+    &__item:first-child {
+        width: 60px;
+    }
+
+    // Bottom wrapper(Heart: likes, eye: nums)
     &__icon-wrapper {
         display: flex;
         align-items: center;
+        margin-right: auto;
         font-size: var(--icons-font-size);
         color: var(--icons-font-color);
         transition: color 0.25s cubic-bezier(0.4, 0, 0.2, 1), fill 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         cursor: pointer;
+    }
+
+    &__icon-wrapper:hover #heart {
+        stroke: var(--icons-hover);
+    }
+
+    &__icon-wrapper:hover {
+        fill: var(--icons-hover);
+        color: var(--icons-hover);
     }
 
     &__likes-icon + p {
@@ -74,11 +90,6 @@
 
     &__likes-icon > .liked {
         display: none;
-    }
-
-    &__icon-wrapper:hover {
-        fill: var(--icons-hover);
-        color: var(--icons-hover);
     }
 
     &__icon {
@@ -104,6 +115,7 @@
     // First row
     &__icon-wrapper::after {
         content: "";
+        display: none;
         width: 85%;
         height: 15px;
         background-color: rgb(163, 191, 250);
@@ -114,7 +126,8 @@
     // Second row
     &__item:after {
         content: "";
-        width: 100%;
+        display: none;
+        width: 90%;
         height: 20px;
         background-color: #a0aec0;
         position: absolute;
@@ -130,6 +143,7 @@
     // Blinking
     .new &__icon-wrapper::after,
     .new &__item:after {
+        display: block;
         opacity: 1;
         animation: pulse 1.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     }
@@ -139,7 +153,7 @@
     &__icon-wrapper > &__icon,
     &__icon-wrapper > p {
         opacity: 1;
-        transition: opacity 300ms ease;
+        transition: opacity 600ms ease;
     }
 
     // Fade in
@@ -163,6 +177,7 @@
 // Fade in picture effect
 .loaded {
     opacity: 1;
-    transition: opacity 1s 0s, transform 250ms cubic-bezier(0.4, 0, 0.2, 1), border-radius 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    transition: opacity 1s 0s, transform 250ms cubic-bezier(0.4, 0, 0.2, 1),
+        border-radius 250ms cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 10;
 }
