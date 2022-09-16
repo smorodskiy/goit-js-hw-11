@@ -47,33 +47,21 @@
     &__info {
         display: flex;
         padding: 10px 20px;
+        justify-content: space-between;
     }
 
     &__item {
         position: relative;
         display: flex;
         flex-direction: column;
+        // align-items: center;
         font-size: 13px;
-        width: calc(100% / 4);
         user-select: none;
-    }
-
-    &__item:nth-child(1) {
-        width: 22%;
-    }
-
-    &__item:nth-child(3) {
-        width: 28%;
-    }
-
-    &__item > a {
-        margin-right: auto;
     }
 
     &__icon-wrapper {
         display: flex;
         align-items: center;
-        margin-right: auto;
         font-size: var(--icons-font-size);
         color: var(--icons-font-color);
         transition: color 0.25s cubic-bezier(0.4, 0, 0.2, 1), fill 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -90,8 +78,8 @@
     }
 
     &__icon {
-        height: 14px;
-        width: 14px;
+        height: var(--icons-size);
+        width: var(--icons-size);
         margin-right: 4px;
     }
 
