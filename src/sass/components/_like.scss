@@ -3,6 +3,9 @@
     overflow: visible;
     width: 30px;
     left: -8px;
+    stroke-width: 2px;
+    stroke: #000;
+    fill: #fff;
     cursor: pointer;
 
     #heart {
@@ -22,6 +25,7 @@
     #heart {
         transform: scale(0.2);
         fill: #e2264d;
+        stroke-width: 0;
         animation: animateHeart 0.3s linear forwards 0.25s;
     }
     #main-circ {
