@@ -68,6 +68,10 @@
         cursor: pointer;
     }
 
+    #heart-svg + p {
+        margin-left: 19px;
+    }
+
     &__likes-icon > .liked {
         display: none;
     }

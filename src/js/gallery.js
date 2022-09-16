@@ -5,6 +5,7 @@ import { getPicturesByName_deb } from "../js/search";
 import { PER_PAGE } from "./services/fetch.js";
 import { lightbox, lightboxUpdateDownloadButton } from "./lightbox";
 import { customScrollbar } from "./scrollbar";
+import { likeElem, onLike } from "./like";
 
 let numPages = 1;
 
@@ -31,6 +32,10 @@ function createGalleryCard(
         comments,
         downloads,
 ) {
+        // <svg class="gallery__icon gallery__likes-icon">
+        //         <use class="shown" xlink:href="${icons}#icon-likes"></use>
+        // </svg>;
+
         const galleryCard = `
         
         <div class="gallery__card new">
@@ -43,9 +48,8 @@ function createGalleryCard(
                         <li class="gallery__item">
                                 <b>Likes</b>
                                 <div class="gallery__icon-wrapper" data="likes">
-                                        <svg class="gallery__icon gallery__likes-icon">                                                
-                                                <use class="shown" xlink:href="${icons}#icon-likes"></use>
-                                        </svg>
+                                        ${likeElem()}
+
                                         <p>${likes}</p>
                                 </div>
                         </li>
@@ -86,24 +90,6 @@ function createGalleryCard(
         return galleryCard;
 }
 
-// Change like(fill and not fill)
-function onLikeBtn(btn) {
-        const useElem = btn.querySelector("use");
-        const countLikesElem = btn.querySelector("p");
-
-        let href = useElem.getAttribute("xlink:href");
-
-        if (href.includes("-fill")) {
-                href = href.substring(0, href.length - 5);
-                --countLikesElem.innerText;
-        } else {
-                href += "-fill";
-                ++countLikesElem.innerText;
-        }
-
-        useElem.setAttribute("xlink:href", href);
-}
-
 // Events on click buttons in cards
 function attachEventsToCardsIcons(newCards) {
         newCards.forEach((card) => {
@@ -111,7 +97,7 @@ function attachEventsToCardsIcons(newCards) {
                 icons.addEventListener("click", (e) => {
                         const btn = e.currentTarget;
                         if (btn.getAttribute("data") == "likes") {
-                                onLikeBtn(btn);
+                                onLike(btn);
                         }
                 });
         });
