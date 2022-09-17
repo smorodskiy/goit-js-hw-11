@@ -1,5 +1,6 @@
 import { debounce } from "lodash";
 import { lightbox } from "./lightbox";
+import Notiflix from "notiflix";
 import { getPicturesByName_deb } from "./search";
 
 export const pagination = {
