@@ -23,10 +23,10 @@
 *.custom-scrollbar > figure {
     position: absolute;
     margin: 0px !important;
-    right: 5px !important;
-    width: 10px !important;
+    right: 0 !important;
+    width: 5px !important;
     height: 100px;
-    background-color: #ffc2e9;
+    background-color: #965de9; //de415f
     z-index: 20000;
 }
 
@@ -54,21 +54,21 @@
 }
 
 .outliner {
-    border: 0 solid;
-    box-shadow: inset 0 0 20px #de415f;
-    outline: 1px solid;
-    outline-color: #de415f;
-    outline-offset: 0px;
-    // text-shadow: none;
     height: 270px;
-    transition: all 1250ms cubic-bezier(0.19, 1, 0.22, 1);
+    border: 0 solid;
+    border-radius: 20px;
+    outline: 1px solid #ff7d7d;
+    transition: all 1.25s cubic-bezier(0.19, 1, 0.22, 1);
+    box-shadow: inset 0 0 20px #955ce8;
+    outline-offset: 0px;
 }
 
 .outliner:hover {
-    border: 1px solid;
-    box-shadow: inset 0 0 20px #ff7608, 0 0 15px #ff7608;
-    outline-color: rgba(255, 255, 255, 0);
     outline-offset: 15px;
+    border: 1px solid;
+    width: 15px !important;
+    outline-color: #fff0;
+    box-shadow: inset 0 0 20px #6358ee, 0 0 15px #6358ee;
     // text-shadow: 1px 1px 2px #427388;
 }
 
