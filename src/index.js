@@ -7,7 +7,7 @@ import "./js/services/fetch";
 import "./js/lightbox";
 
 // Components of style
-import "./js/style/search";
-import "./js/style/gallery";
+import "./js/search";
+import "./js/gallery";
 import "./js/style/scrollbar";
 import "./js/style/up-button";

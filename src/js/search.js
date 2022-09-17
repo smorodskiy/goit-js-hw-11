@@ -1,4 +1,4 @@
-import { fetchPictures } from "../services/fetch.js";
+import { fetchPictures } from "./services/fetch.js";
 import { debounce } from "lodash";
 import Notiflix from "notiflix";
 import { initRender } from "./gallery";
