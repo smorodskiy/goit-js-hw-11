@@ -207,7 +207,7 @@ export function customScrollbar() {
                 const relation = document.documentElement.clientHeight / body.scrollHeight;
 
                 // Set size scrollbar like relation (all of doc to visible part)
-                const calcScrollSize =
+                let calcScrollSize =
                         100 *
                         (
                                 (document.documentElement.clientHeight * +relation) /
