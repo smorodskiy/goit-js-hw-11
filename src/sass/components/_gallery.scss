@@ -76,7 +76,7 @@
         cursor: pointer;
     }
 
-    &__icon-wrapper:hover #heart {
+    &__icon-wrapper:hover .heart > path {
         stroke: var(--icons-hover);
     }
 

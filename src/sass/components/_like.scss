@@ -1,7 +1,7 @@
 :root {
     --color-bg: #fdf1f2;
     // --color-heart: #ea442b;
-    --color-heart: rgba(150, 93, 233, 1);
+    --color-heart: #965de9;
     --easing: cubic-bezier(0.7, 0, 0.3, 1);
     --duration: 0.5s;
 }
@@ -21,7 +21,7 @@
         left: -8px;
         outline: none;
         z-index: 2;
-        transition: transform var(--duration) var(--easing);
+        // transition: transform var(--duration) var(--easing);
         cursor: pointer;
 
         &:before {
@@ -49,10 +49,8 @@
             z-index: -1;
         }
 
-        &.liked {
-            &:before {
-                animation: depress-shadow var(--duration) var(--easing) both;
-            }
+        &.liked:before {
+            animation: depress-shadow var(--duration) var(--easing) both;
         }
 
         &.liked:after {
@@ -79,17 +77,17 @@
             }
         }
     }
-}
 
-.like-wrapper {
-    display: grid;
-    align-items: center;
-    justify-content: center;
-    z-index: 1;
+    & .like-wrapper {
+        display: grid;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
 
-    > * {
-        margin: auto;
-        grid-area: 1 / 1;
+        > * {
+            margin: auto;
+            grid-area: 1 / 1;
+        }
     }
 }
 
@@ -102,22 +100,23 @@
         stroke: var(--icons-font-color);
         stroke-width: 2;
         fill: transparent;
-        transition: fill var(--duration) var(--easing);
+        transition: fill var(--duration);
 
         .gallery__likes-icon.liked & {
             fill: var(--color-heart);
-            stroke: var(--color-heart);            
+            stroke: var(--color-heart);
         }
     }
 
     transform-origin: center 80%;
 
     .gallery__likes-icon.liked & {
-        // transition: stroke var(--duration) var(--easing);
+        transition: stroke var(--duration);
         animation: heart-bounce var(--duration) var(--easing);
         @keyframes heart-bounce {
             40% {
                 stroke: var(--color-heart);
+                // stroke: #6358ee;
                 transform: scale(0.7);
             }
             0%,
@@ -148,7 +147,7 @@
     --percentage: calc(var(--i) / var(--total-particles));
     --Θ: calc(var(--percentage) * 1turn);
     transform: translate(-50%, -50%) rotate(var(--Θ)) translateY(0) scaleY(0);
-    transition: all var(--duration) var(--easing);
+    // transition: all var(--duration) var(--easing);
 
     .gallery__likes-icon.liked & {
         animation: particles-out calc(var(--duration) * 1.2) var(--easing) forwards;
