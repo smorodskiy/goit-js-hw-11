@@ -1,12 +1,13 @@
 // import "./js/storage";
-import "./js/search";
-import "./js/gallery";
-
-// Additional
-import "./js/lightbox";
-import "./js/scrollbar";
-import "./js/up-button";
 
 // Services
 import "./js/services/download";
 import "./js/services/fetch";
+
+import "./js/lightbox";
+
+// Components of style
+import "./js/style/search";
+import "./js/style/gallery";
+import "./js/style/scrollbar";
+import "./js/style/up-button";

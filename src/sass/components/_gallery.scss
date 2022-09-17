@@ -85,11 +85,12 @@
     }
 
     &__likes-icon + p {
-        margin-left: 19px;
+        margin-left: 20px;
+        z-index: 2;
     }
 
     &__likes-icon > .liked {
-        display: none;
+        // display: none;
     }
 
     &__icon {

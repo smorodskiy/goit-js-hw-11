@@ -1,11 +1,17 @@
+// Num of page from request
+import { PER_PAGE } from "../services/fetch.js";
 import { debounce } from "lodash";
+
 import Notiflix from "notiflix";
-import icons from "../images/icons.svg";
-import { getPicturesByName_deb } from "../js/search";
-import { PER_PAGE } from "./services/fetch.js";
-import { lightbox, lightboxUpdateDownloadButton } from "./lightbox";
-import { customScrollbar } from "./scrollbar";
-import { likeElem, onLike } from "./like";
+import { lightbox, lightboxUpdateDownloadButton } from "../lightbox";
+
+// Icons
+import icons from "../../images/icons.svg";
+
+// Components of style
+import { getPicturesByName_deb } from "../style/search";
+import { customScrollbar } from "../style/scrollbar";
+import { heartElement, onLike } from "../style/like";
 
 let numPages = 1;
 
@@ -32,10 +38,6 @@ function createGalleryCard(
         comments,
         downloads,
 ) {
-        // <svg class="gallery__icon gallery__likes-icon">
-        //         <use class="shown" xlink:href="${icons}#icon-likes"></use>
-        // </svg>;
-
         const galleryCard = `
         
         <div class="gallery__card new">
@@ -48,7 +50,7 @@ function createGalleryCard(
                         <li class="gallery__item">
                                 <b>Likes</b>
                                 <div class="gallery__icon-wrapper" data="likes">
-                                        ${likeElem()}
+                                        ${heartElement()}
 
                                         <p>${likes}</p>
                                 </div>
@@ -153,19 +155,6 @@ function paginationShowLoading(show) {
                         `,
                 );
 
-                // container.insertAdjacentHTML(
-                //         "beforeend",
-                //         `
-
-                //         <div class="loading">
-                //                 <div class="loading__yellow"></div>
-                //                 <div class="loading__red"></div>
-                //                 <div class="loading__blue"></div>
-                //                 <div class="loading__violet"></div>
-                //         </div>
-
-                //         `,
-                // );
                 window.scrollTo(0, document.body.scrollHeight);
         } else {
                 const loading = document.querySelector(".loading");
