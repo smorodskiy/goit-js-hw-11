@@ -145,28 +145,33 @@
     border-radius: 0.05em;
     background-color: var(--color);
     // transition: all var(--duration) var(--easing);
-    display: none;
+    // display: block;
+    visibility: hidden;
     .gallery__likes-icon.liked & {
-        display: block;
         animation: particles-out calc(var(--duration) * 1.2) var(--easing) forwards;
         --percentage: calc(var(--i) / var(--total-particles));
-        --Θ: calc(var(--percentage) * 1turn);
-        transform: translate(-50%, -50%) rotate(var(--Θ)) translateY(0) scaleY(0);
-    
+        --0: calc(var(--percentage) * 1turn);
+        transform: translate(-50%, -50%) rotate(var(--0)) translateY(0) scaleY(0);
+        visibility: visible;
         @keyframes particles-out {
             50% {
+                
                 height: 0.3em;
             }
             50%,
             60% {
                 height: 0.3em;
-                transform: translate(-50%, -50%) rotate(var(--Θ)) translateY(0.8em) scale(1);
+                transform: translate(-50%, -50%) rotate(var(--0)) translateY(0.8em) scale(1);
             }
             60% {
                 height: 0.2em;
             }
+            99.9% {
+                transform: translate(-50%, -50%) rotate(var(--0)) translateY(1em) scale(0);
+            }
             100% {
-                transform: translate(-50%, -50%) rotate(var(--Θ)) translateY(1em) scale(0);
+                transform: translate(-50%, -50%) rotate(0) translateY(1em) scale(0);
+                visibility: hidden;
             }
         }
     }
