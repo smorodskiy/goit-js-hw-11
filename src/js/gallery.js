@@ -2,9 +2,9 @@
 import { PER_PAGE } from "./services/fetch.js";
 
 import Notiflix from "notiflix";
-import { lightbox, lightboxUpdateDownloadButton } from "./lightbox";
+import { lightbox, addDownloadButtonToLightbox } from "./lightbox";
 
-import { onLike } from "./style/like";
+import { clickOnLike } from "./style/like";
 import { pagination } from "./pagination";
 
 // Components of style
@@ -24,19 +24,6 @@ Notiflix.Notify.init({
         cssAnimationStyle: "zoom",
         // closeButton: true,
 });
-
-// Events on click buttons in cards
-function attachEventsToCardsIcons(newCards) {
-        newCards.forEach((card) => {
-                const icons = card.querySelector(".gallery__icon-wrapper");
-                icons.addEventListener("click", (e) => {
-                        const btn = e.currentTarget;
-                        if (btn.getAttribute("data") == "likes") {
-                                onLike(btn);
-                        }
-                });
-        });
-}
 
 // Clear gallery
 function clearGallery() {
@@ -82,15 +69,28 @@ function renderPicsToGrid(picsOfJSON) {
         // Get all new cards
         const newCards = gallery.querySelectorAll(".gallery__card.new");
 
-        // Add events on pictures / checking downloading complete
-        attachOnLoadToPics(newCards);
+        // Add events to cards
+        attachEventsToCards(newCards);
 
         return newCards;
 }
 
+// Events on click buttons in cards
 // Add events on pictures and checking downloading complete
-function attachOnLoadToPics(newCards) {
+function attachEventsToCards(newCards) {
         newCards.forEach((card) => {
+                // Get icons refs
+                const icons = card.querySelector(".gallery__icon-wrapper");
+
+                // Click event on Like buttons
+                icons.addEventListener("click", (e) => {
+                        const btn = e.currentTarget;
+                        if (btn.getAttribute("data") == "likes") {
+                                clickOnLike(btn);
+                        }
+                });
+
+                // Get link and img refs
                 const link = card.firstElementChild;
                 const img = link.firstElementChild;
 
@@ -145,50 +145,59 @@ export function initRender(foundedPics, name, currentPage) {
                 window.onscroll = null;
 
                 // Rendering part of gallery
-                var newCards = renderPicsToGrid(foundedPics);
+                renderPicsToGrid(foundedPics);
 
                 // Add attach on scrolling and doing pagination if num of pages more than one
                 if (numPages > 1)
-                        window.onscroll = pagination.scrollPagination_deb(name, currentPage, numPages);
+                        window.onscroll = pagination.scrollPagination_deb(
+                                name,
+                                currentPage,
+                                numPages,
+                        );
+
+                // Execute custom Scrollbar only on desktop devices
+                if ("ontouchstart" in window == false) {
+                        document.body.classList.add("custom-scrollbar");
+                        customScrollbar.init();
+                }
         }
 
         if (currentPage > 1) {
                 // Save last position for custom scroll
                 if (isCustomScroll) lastScrollTop = document.documentElement.scrollTop;
 
-                // lightbox.refresh();
-                // Close active picture
-                // lightbox.close();
-                // const isClosed = new Promise()
-
                 // Hide waiting label and get label height
-                const loadingHeight = pagination.showAnimation(false);
+                pagination.showAnimation(false);
 
                 // Rendering part of gallery
-                var newCards = renderPicsToGrid(foundedPics);
+                renderPicsToGrid(foundedPics);
 
                 // Restore last position for custom scroll
                 if (isCustomScroll) document.documentElement.scrollTop = lastScrollTop;
 
                 // Do smooth scroll
-                pagination.scrollToNewCards(loadingHeight);
+                pagination.scrollToNewCards();
 
                 // Attach scroll event
                 window.onscroll = pagination.scrollPagination_deb(name, currentPage, numPages);
+
+                // Resize scrollbar
+                document.querySelector(".custom-scrollbar") && customScrollbar.setScrollSize();
         }
 
-        // Refresh simple box for new DOM
-        lightbox.refresh();
+        // If Lightbox preview img is open - close it
+        if (lightbox.isOpen) {
+                lightbox.close();
 
-        // Func for Update href for Download button
-        lightboxUpdateDownloadButton();
-
-        // Attach events on cards buttons
-        attachEventsToCardsIcons(newCards);
-
-        // Execute custom Scrollbar only on desktop devices
-        if ("ontouchstart" in window == false) {
-                document.body.classList.add("custom-scrollbar");
-                customScrollbar();
+                // this event fires after the lightbox was closed
+                lightbox.on("closed.simplelightbox", function (e) {
+                        lightbox.refresh();
+                        // Add Download button to lightbox preview
+                        addDownloadButtonToLightbox();
+                });
+        } else {
+                lightbox.refresh();
+                // Add Download button to lightbox preview
+                addDownloadButtonToLightbox();
         }
 }
