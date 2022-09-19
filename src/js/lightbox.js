@@ -13,7 +13,7 @@ export const lightbox = new SimpleLightbox(".gallery .gallery__link", {
 });
 
 // Update href for Download button on shown and changed events
-export function lightboxUpdateDownloadButton() {
+export function addDownloadButtonToLightbox() {
         // this event fires after the lightbox was opened
         lightbox.on("shown.simplelightbox", function (e) {
                 const simplelightbox = document.querySelector(".sl-wrapper");
