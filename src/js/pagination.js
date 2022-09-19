@@ -4,6 +4,8 @@ import Notiflix from "notiflix";
 import { getPicturesByName_deb } from "./search";
 
 export const pagination = {
+        loadingHeight: 0,
+
         // Loading... label
         showAnimation(show) {
                 const container = document.querySelector(".container");
@@ -12,18 +14,18 @@ export const pagination = {
                         container.insertAdjacentHTML(
                                 "beforeend",
                                 `
-                <div class="loading">
-                <ul>
-                  <li></li>
-                  <li></li>
-                  <li></li>
-                  <li></li>
-                  <li></li>
-                  <li></li>
-                  <li></li>
-                </ul>
-              </div>
-                `,
+                                <div class="loading">
+                                        <ul>
+                                                <li></li>
+                                                <li></li>
+                                                <li></li>
+                                                <li></li>
+                                                <li></li>
+                                                <li></li>
+                                                <li></li>
+                                        </ul>
+                                </div>
+                                `,
                         );
 
                         window.scrollTo(0, document.body.scrollHeight);
@@ -31,11 +33,9 @@ export const pagination = {
                         const loading = document.querySelector(".loading");
 
                         // Get loading div's size
-                        const loadingHeight = getAbsoluteHeight(document.querySelector(".loading"));
+                        this.loadingHeight = getAbsoluteHeight(document.querySelector(".loading"));
 
                         loading.remove();
-
-                        return loadingHeight;
                 }
         },
 
@@ -44,7 +44,7 @@ export const pagination = {
                 debounce(() => scrollEventPagination(name, currentPage, numPages), 100),
 
         // Smooth scrolling for pagination
-        scrollToNewCards(loadingHeight) {
+        scrollToNewCards() {
                 const container = document.querySelector(".container");
 
                 const paddingBottom = window
@@ -54,7 +54,7 @@ export const pagination = {
                 window.scrollBy({
                         top:
                                 document.documentElement.clientHeight -
-                                loadingHeight -
+                                this.loadingHeight -
                                 parseInt(paddingBottom),
                         behavior: "smooth",
                 });
@@ -76,6 +76,7 @@ function getAbsoluteHeight(el) {
 function scrollEventPagination(name, currentPage, numPages) {
         // If position is end of page
         if (Math.round(window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
+                
                 // Temp deattach
                 window.onscroll = null;
 
@@ -91,9 +92,6 @@ function scrollEventPagination(name, currentPage, numPages) {
 
                 // Show waiting label
                 pagination.showAnimation(true);
-
-                // Close active picture
-                lightbox.close();
 
                 // Little wait for loading label
                 setTimeout(() => {
