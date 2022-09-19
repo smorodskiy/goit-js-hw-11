@@ -1,5 +1,5 @@
 // On click
-export function onLike(btn) {
+export function clickOnLike(btn) {
         const countLikesElem = btn.querySelector("p");
         const likeElem = btn.querySelector(".gallery__likes-icon");
         likeElem.classList.toggle("liked") ? ++countLikesElem.innerText : --countLikesElem.innerText;
