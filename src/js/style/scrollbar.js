@@ -57,165 +57,163 @@ function enableSelection(el) {
 }
 
 // Custom scrollbar
-export function customScrollbar() {
-        var body,
-                scrollbar, // Runner
-                clientHeightWithoutScroll, // Runner height
-                scrollTop, // Start scroll top,
-                screenY = 0;
+export const customScrollbar = {
+        scrollbar: null, // Runner
+        clientHeightWithoutScroll: 0, // Runner height
+        scrollTop: 0, // Start scroll top,
+        screenY: 0,
+        body: null,
 
-        body = document.querySelector(".custom-scrollbar");
+        init() {
+                this.body = document.querySelector(".custom-scrollbar");
 
-        // Check if scrollbar already present in DOM
-        // Scroll reference
-        if (!document.querySelector("figure")) {
-                scrollbar = document.createElement("figure");
-                body.insertAdjacentElement("afterbegin", scrollbar);
+                // Check if scrollbar already present in DOM
+                // Scroll reference
+                if (!document.querySelector("figure")) {
+                        this.scrollbar = document.createElement("figure");
+                        this.body.insertAdjacentElement("afterbegin", this.scrollbar);
 
-                // Add style
-                scrollbar.className = "outliner";
-        } else {
-                scrollbar = document.querySelector("figure");
-        }
-
-        // First init size
-        setScrollSize();
-
-        // Listen for scroll
-        eventListner(document, "scroll", handlerScroll);
-
-        // Resize scrollbar on resizing window
-        eventListner(window, "resize", setScrollSize);
-
-        // Listen for drug
-        eventListner(scrollbar, "mousedown", handlerDown);
-        eventListner(scrollbar, "mouseup", handlerUp);
-
-        // Lister for drug on wrapper(up/down of the scrollbar)
-        eventListner(body, "mousedown", handlerWrapDown);
-
-        // On mouse up click
-        function handlerUp(e) {
-                // drag = !!0;
-
-                // Enable selection
-                enableSelection(body);
-
-                // Enable transition
-                scrollbar.classList.remove("notransition"); // Re-enable transitions
-
-                // Set style
-                // setDefaultStyle();
-
-                // remove listen for window move
-                removeEventListner(window, "mousemove", handlerMove);
-
-                // Stop events(bubbling)
-                e.stopPropagation();
-        }
-
-        // On mouse down click
-        function handlerDown(e) {
-                // drag = !0;
-
-                // Vertical position
-                screenY = e.screenY;
-
-                // Height of visible document minus height of scrollbar
-                clientHeightWithoutScroll =
-                        document.documentElement.clientHeight -
-                        parseInt(window.getComputedStyle(scrollbar).height);
-
-                // Current position scrollbar
-                scrollTop = document.documentElement.scrollTop;
-
-                // Disable selection
-                disableSelection(body);
-
-                // Disable transition, slowly moving
-                scrollbar.classList.add("notransition");
-
-                // Listen for window move
-                eventListner(window, "mousemove", handlerMove);
-                eventListner(window, "mouseup", handlerUp, true);
-
-                e.preventDefault();
-                return false;
-        }
-
-        // On mouse move
-        function handlerMove(e) {
-                // Calc position of scroll
-                // Height of visible document without scrollbar *
-                // (Last Y position of scrollbar / (height all of document - visible part document)) +
-                //
-                var curScrollPosition =
-                        clientHeightWithoutScroll *
-                                (scrollTop /
-                                        (body.scrollHeight -
-                                                document.documentElement.clientHeight)) +
-                        (e.screenY - screenY);
-
-                // Checking scroll position don't moving out of clientheight
-                if (curScrollPosition > clientHeightWithoutScroll)
-                        curScrollPosition = clientHeightWithoutScroll;
-                else if (curScrollPosition < 0) curScrollPosition = 0;
-
-                // Calc new scroll position
-                const calcNewScrollPosition = Math.round(
-                        (body.scrollHeight - document.documentElement.clientHeight) *
-                                (curScrollPosition / clientHeightWithoutScroll),
-                );
-
-                // Set scrollbar new position
-                window.scrollTo(0, calcNewScrollPosition);
-        }
-
-        // Mouse click on wrapper scrollbar
-        function handlerWrapDown(e) {
-                // Click at area scroll(15px from right side)
-                if (e.offsetX > body.offsetWidth - 15) {
-                        const calcNewScrollPosition = (document.documentElement.scrollTop =
-                                Math.round(
-                                        (body.scrollHeight -
-                                                document.documentElement.clientHeight) *
-                                                (e.offsetY / body.offsetHeight),
-                                ));
-
-                        // Set scrollbar new position
-                        window.scrollTo(0, calcNewScrollPosition);
-
-                        // Call mouse down click for document moving
-                        handlerDown(e);
+                        // Add style
+                        this.scrollbar.className = "outliner";
+                } else {
+                        this.scrollbar = document.querySelector("figure");
                 }
-        }
 
-        // On mouse scroll
-        function handlerScroll() {
-                // Set postition scrollbar on mouse scrolling
-                scrollbar.style.top =
-                        (100 - parseFloat(scrollbar.style.height)) *
-                                (document.documentElement.scrollTop /
-                                        (body.scrollHeight -
-                                                document.documentElement.clientHeight)) +
-                        "%";
-        }
+                // First init size
+                this.setScrollSize();
+
+                // Listen for scroll
+                eventListner(document, "scroll", (e) => this.handlerScroll(e));
+
+                // Resize scrollbar on resizing window
+                eventListner(window, "resize", (e) => this.setScrollSize(e));
+
+                // Listen for drug
+                eventListner(this.scrollbar, "mousedown", (e) => this.handlerDown(e));
+                eventListner(this.scrollbar, "mouseup", (e) => this.handlerUp(e));
+
+                // Lister for drug on wrapper(up/down of the scrollbar)
+                eventListner(this.body, "mousedown", (e) => this.handlerWrapDown(e));
+        },
 
         // Set size of scrollbar
-        function setScrollSize() {
+        setScrollSize() {
                 // Calc relation all of doc to visible part
-                const relation = document.documentElement.clientHeight / body.scrollHeight;
+                const relation = document.documentElement.clientHeight / this.body.scrollHeight;
 
                 // Set size scrollbar like relation (all of doc to visible part)
                 let calcScrollSize =
                         100 *
                         (
                                 (document.documentElement.clientHeight * +relation) /
-                                body.scrollHeight
+                                this.body.scrollHeight
                         ).toFixed(5);
 
                 // Set scroll size and if size very small set static
-                scrollbar.style.height =
+                this.scrollbar.style.height =
                         calcScrollSize < 0.003 ? (calcScrollSize = 0.003) : calcScrollSize + "%";
-        }
-}
+        },
+        // On mouse up click
+        handlerUp(e) {
+                // drag = !!0;
+
+                // Enable selection
+                enableSelection(this.body);
+
+                // Enable transition
+                this.scrollbar.classList.remove("notransition"); // Re-enable transitions
+                
+                // remove listen for window move
+                removeEventListner(window, "mousemove", this.handlerMove);
+
+                // Stop events(bubbling)
+                e.stopPropagation();
+        },
+
+        // On mouse down click
+        handlerDown(e) {
+                // drag = !0;
+
+                // Vertical position
+                this.screenY = e.screenY;
+
+                // Height of visible document minus height of scrollbar
+                this.clientHeightWithoutScroll =
+                        document.documentElement.clientHeight -
+                        parseInt(window.getComputedStyle(this.scrollbar).height);
+
+                // Current position scrollbar
+                this.scrollTop = document.documentElement.scrollTop;
+
+                // Disable selection
+                disableSelection(this.body);
+
+                // Disable transition, slowly moving
+                this.scrollbar.classList.add("notransition");
+
+                // Listen for window move
+                eventListner(window, "mousemove", this.handlerMove);
+                eventListner(window, "mouseup", (e) => this.handlerUp(e), true);
+
+                e.preventDefault();
+                return false;
+        },
+
+        // On mouse move
+        handlerMove(e) {
+                // Calc position of scroll
+                // Height of visible document without scrollbar *
+                // (Last Y position of scrollbar / (height all of document - visible part document)) +
+                //
+                var curScrollPosition =
+                        customScrollbar.clientHeightWithoutScroll *
+                                (customScrollbar.scrollTop /
+                                        (customScrollbar.body.scrollHeight -
+                                                document.documentElement.clientHeight)) +
+                        (e.screenY - customScrollbar.screenY);
+
+                // Checking scroll position don't moving out of clientheight
+                if (curScrollPosition > customScrollbar.clientHeightWithoutScroll)
+                        curScrollPosition = customScrollbar.clientHeightWithoutScroll;
+                else if (curScrollPosition < 0) curScrollPosition = 0;
+
+                // Calc new scroll position
+                const calcNewScrollPosition = Math.round(
+                        (customScrollbar.body.scrollHeight - document.documentElement.clientHeight) *
+                                (curScrollPosition / customScrollbar.clientHeightWithoutScroll),
+                );
+
+                // Set scrollbar new position
+                window.scrollTo(0, calcNewScrollPosition);
+        },
+
+        // Mouse click on wrapper scrollbar
+        handlerWrapDown(e) {
+                // Click at area scroll(15px from right side)
+                if (e.offsetX > this.body.offsetWidth - 15) {
+                        const calcNewScrollPosition = (document.documentElement.scrollTop =
+                                Math.round(
+                                        (this.body.scrollHeight -
+                                                document.documentElement.clientHeight) *
+                                                (e.offsetY / this.body.offsetHeight),
+                                ));
+
+                        // Set scrollbar new position
+                        window.scrollTo(0, calcNewScrollPosition);
+
+                        // Call mouse down click for document moving
+                        this.handlerDown(e);
+                }
+        },
+
+        // On mouse scroll
+        handlerScroll() {
+                // Set postition scrollbar on mouse scrolling
+                this.scrollbar.style.top =
+                        (100 - parseFloat(this.scrollbar.style.height)) *
+                                (document.documentElement.scrollTop /
+                                        (this.body.scrollHeight -
+                                                document.documentElement.clientHeight)) +
+                        "%";
+        },
+};
